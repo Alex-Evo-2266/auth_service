@@ -8,11 +8,11 @@ class User(ormar.Model):
         pass
 
     id: int = ormar.Integer(primary_key=True)
-    UserName: str = ormar.String(max_length=200, nullable=False)
-    UserSurname: str = ormar.String(max_length=200, nullable=True)
-    UserPassword: str = ormar.String(max_length=200, nullable=False)
-    UserEmail: str = ormar.String(max_length=200, nullable=False)
-    UserLevel: int = ormar.Integer(default=1)
+    name: str = ormar.String(max_length=200, nullable=False)
+    surname: str = ormar.String(max_length=200, nullable=True)
+    password: str = ormar.String(max_length=200, nullable=False)
+    email: str = ormar.String(max_length=200, nullable=False)
+    level: int = ormar.Integer(default=1)
     Style: str = ormar.String(max_length=200, default="light")
     auteStyle: bool = ormar.Boolean(default=True)
     staticBackground: bool = ormar.Boolean(default=False)
