@@ -3,13 +3,13 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 
 from auth_service.logic.auth import refresh_token as rtoken, login as Authorization
-from auth_service.schemas.auth import Login
+from auth_service.schemas.auth import Login, Token
 
 router = APIRouter(
     prefix="/auth_api/auth",
     tags=["auth"],
     responses={404: {"description": "Not found"}},
-)
+    )
 
 @router.post("/login")
 async def login(data: Login):

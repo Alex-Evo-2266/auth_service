@@ -1,5 +1,5 @@
 import ormar
-from SmartHome.dbormar import BaseMeta
+from auth_service.dbormar import BaseMeta
 from typing import Optional, List
 
 # Create your models here.

@@ -4,6 +4,7 @@ from fastapi import FastAPI
 import logging
 
 from auth_service.dbormar import metadata, database, engine
+from auth_service.api.auth import router as router_auth
 from auth_service.settings import MEDIA_ROOT, MEDIA_URL, DEBUG, ORIGINS
 
 logger = logging.getLogger(__name__)
@@ -35,3 +36,5 @@ async def shutdown() -> None:
     database_ = app.state.database
     if database_.is_connected:
         await database_.disconnect()
+
+app.include_router(router_auth)
