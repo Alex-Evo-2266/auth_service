@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { useDispatch } from 'react-redux';
 // import {Link} from 'react-router-dom'
-import {useHttp} from '../hooks/http.hook'
+import {methods, useHttp} from '../hooks/http.hook'
 
 export const AuthPage = function (){
 	const dispatch = useDispatch()
@@ -24,7 +24,7 @@ export const AuthPage = function (){
 
 	const loginHandler = async () => {
 		try {
-			const data = await request('/auth_api/login', 'POST', {...form})
+			const data = await request('/api/auth/login', methods.POST, {...form})
 			if(data)
 				dispatch({type: "LOGIN", payload:{id: data.userId, level: data.userLavel, token: data.token}})
 		} catch (e) {

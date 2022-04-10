@@ -1,0 +1,26 @@
+.profile-container{
+	display: flex;
+	position: relative;
+	height: 100%;
+	.profile{
+		padding: 0 20px;
+		flex-basis:33.33%; 
+		height: 100%;
+		.img-container{
+			padding: 20px;
+			height: 300px;
+			width: 300px;
+		}
+		.text-container{
+			padding: 10px 10px;
+			display: flex;
+			.text{
+				flex-basis:50%; 
+			}
+		}
+	}
+	.services{
+		flex-basis:66.66%;
+		height: 30px;
+	}
+}

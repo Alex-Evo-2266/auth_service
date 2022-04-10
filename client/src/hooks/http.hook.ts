@@ -7,6 +7,13 @@ function getErrorMessage(error: unknown) {
 	return String(error)
 }
 
+export enum methods{
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE"
+}
+
 export const useHttp = () => {
 	const dispatch = useDispatch()
 	const [loading, setLoading] = useState<boolean>(false);
@@ -23,7 +30,7 @@ export const useHttp = () => {
     return data.token
   },[dispatch])
 
-  const request = useCallback(async (url, method="GET", body = null, headers = {},file=false) => {
+  const request = useCallback(async (url:string, method:methods=methods.GET , body = null, headers = {},file:boolean=false) => {
     setLoading(true);
     try {
       if(headers['Authorization'])

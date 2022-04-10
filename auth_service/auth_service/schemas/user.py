@@ -12,13 +12,13 @@ class UserSchema(BaseModel):
     surname: Optional[str]
     email: Optional[str]
     level: int
-    ImageId: Optional[int]
+    imageURL: Optional[str]
 
 class UserEditSchema(BaseModel):
     name: str
     surname: Optional[str]
     email: Optional[str]
-    ImageId: Optional[int]
+    imageId: Optional[int]
 
 class UserDeleteSchema(BaseModel):
     id: int

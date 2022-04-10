@@ -39,11 +39,11 @@ async def getUser(id)->FunctionRespons:
         return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
     return FunctionRespons(status=TypeRespons.OK, data=UserSchema(
         id=user.id,
-        name=user.UserName,
-        surname=user.UserSurname,
-        email=user.UserEmail,
-        level=user.UserLevel,
-        ImageId=None
+        name=user.name,
+        surname=user.surname,
+        email=user.email,
+        level=user.level,
+        imageURL=None
     ))
 
 async def editUser(id: int,data: UserEditSchema)->FunctionRespons:
@@ -51,11 +51,10 @@ async def editUser(id: int,data: UserEditSchema)->FunctionRespons:
     if not user:
         logger.error(f"user does not exist. id:{id}")
         return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
-    user.name = data.UserName
-    user.surname = data.UserSurname
-    user.mobile = data.Mobile
-    user.email = data.Email
-    await user.update(_columns=["name", "surname", "mobile", "email"])
+    user.name = data.name
+    user.surname = data.surname
+    user.email = data.email
+    await user.update(_columns=["name", "surname", "email"])
     logger.debug(f'edit user {id}')
     return FunctionRespons(status = TypeRespons.OK)
 
@@ -78,13 +77,12 @@ async def getUsers()->FunctionRespons:
         return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
     for item in users:
         outUsers.append(UserSchema(
-            UserId=item.id,
-            UserName=item.UserName,
-            UserSurname=item.UserSurname,
-            Email=item.UserEmail,
-            Mobile=item.UserMobile,
-            Level=item.UserLevel,
-            ImageId=None
+            id=item.id,
+            name=item.UserName,
+            surname=item.UserSurname,
+            email=item.UserEmail,
+            level=item.UserLevel,
+            imageURL=None
         ))
     return FunctionRespons(status = TypeRespons.OK, data=outUsers)
 

@@ -9,10 +9,13 @@ export const useRoutes = (isAuthenticated:boolean)=>{
         {
           (isAuthenticated)?
           <>
-          <Route path="/profile" element={<ProfilePage/>}/>
-          <Route path="/*" element={<Navigate replace to="/profile" />} />
+            <Route path="/profile" element={<ProfilePage/>}/>
+            <Route path="/*" element={<Navigate replace to="/profile" />} />
           </>:
-          <Route path="/" element={<AuthPage/>}/>
+          <>
+           <Route path="/" element={<AuthPage/>}/>
+           <Route path="/*" element={<Navigate replace to="/" />} />
+          </>
         }
       </Routes>
 	)

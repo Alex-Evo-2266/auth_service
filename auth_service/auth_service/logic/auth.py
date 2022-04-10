@@ -76,19 +76,19 @@ async def auth(Authorization):
     except Exception as e:
         return {'type':'error', 'detail':e}
 
-async def refresh_token(token: str):
+async def refresh_token(token: str)->FunctionRespons:
     try:
         data = jwt.decode(token,settings.SECRET_REFRESH_JWT_KEY,algorithms=[settings.ALGORITHM])
         if not('exp' in data and 'user_id' in data and data['sub'] == "refresh"):
-            logger.worning(f"no data in jwt")
-            return {'type':'error'}
+            logger.warning(f"no data in jwt")
+            return FunctionRespons(status=TypeRespons.ERROR, detail="no data in jwt")
         if (datetime.utcnow() > datetime.fromtimestamp(data['exp'])):
             logger.debug(f"outdated jwt")
-            return {'type':'outdated_jwt'}
+            return FunctionRespons(status=TypeRespons.INVALID, detail="outdated jwt")
         u = await User.objects.get_or_none(id=data["user_id"])
         encoded_jwt = await create_tokens(u.id)
         result = {"token":encoded_jwt.access, "userId":u.id,"userLavel":u.level}
-        logger.info(f"login user: {u.UserName}, id: {u.id}")
-        return {"status":"ok","data":{"refresh":encoded_jwt.refresh, "response": result}}
+        logger.info(f"login user: {u.name}, id: {u.id}")
+        return FunctionRespons(status=TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
     except Exception as e:
-        return {'type':'error', 'detail':e}
+        return FunctionRespons(status=TypeRespons.ERROR, detail=str(e))

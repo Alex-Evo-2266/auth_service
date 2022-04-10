@@ -6,6 +6,7 @@ import { useTypeSelector } from './hooks/useTypeSelector';
 import { IAuthState } from './interfaces/authInterfaces';
 import { useRoutes } from './routs';
 import "./style/index.scss"
+import './icon/css/all.css'
 
 
 const App:React.FC = ()=>{
