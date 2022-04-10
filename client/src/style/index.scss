@@ -9,8 +9,20 @@ $z-index: (
   share              : 40,
 );
 
+body{
+	--color-base: #333;
+	--color-base-v2: #555;
+	--color-normal: #777;
+	--color-normal-v2: #999;
+	--color-active: #1E90FF;
+  --text-base: #fff;
+  --text-normal: #fff;
+  --text-active: #fff;
+}
+
 @import "menu.scss";
 @import "profile.scss";
+@import "loading.scss";
 
 .container{
     position: relative;
@@ -20,19 +32,24 @@ $z-index: (
 }
 
 .separation{
-  border-bottom: 1px solid #aaa;
-  color: #aaa;
+  border-bottom: 1px solid var(--color-normal-v2);
+  color: var(--color-normal-v2);
   text-align: center;
   margin: 0 10px;
 }
 
 .btn{
   margin: 10px;
-  padding: 5px;
+  display: block;
   width: calc(100% - 20px);
   border: none;
+  font-size: 18px;
+  text-decoration: none;
   background: var(--color-active);
+  color: var(--text-active);
   height: 36px;
+  line-height: 36px;
+  text-align: center;
   border-radius: 4px;
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.226), 
     0px 2px 2px 0px rgba(0, 0, 0, 0.14),
@@ -46,4 +63,38 @@ $z-index: (
     box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
     filter: brightness(90%);
   }
+}
+
+.input-data{
+	height: 40px;
+	width: 100%;
+	position: relative;
+	$top: -20px;
+	input{
+		height: 100%;
+		width: 100%;
+		border: none;
+		outline: none;
+		border-bottom: 2px solid var(--color-normal-v2);
+		font-size: 17px;
+		&:focus, &:valid{
+			border-bottom: 2px solid var(--color-active);
+		}
+	}
+	input:focus ~ label,
+	input:valid ~ label{
+		transform: translateY($top);
+		font-size: 13px;
+		color: var(--color-active);
+	}
+	label{
+		position: absolute;
+		bottom: 10px;
+		left: 0;
+		transform: translateY(0);
+		font-size: 17px;
+		color: var(--color-normal-v2);
+		pointer-events: none;
+		transition: 0.3s;
+	}
 }

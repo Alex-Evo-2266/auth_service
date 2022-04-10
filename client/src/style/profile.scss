@@ -4,8 +4,9 @@
 	height: 100%;
 	.profile{
 		padding: 0 20px;
+		position: relative;
 		flex-basis:33.33%; 
-		height: 100%;
+		height: calc(100vh - 60px);
 		.img-container{
 			padding: 20px;
 			height: 300px;
@@ -13,14 +14,18 @@
 		}
 		.text-container{
 			padding: 10px 10px;
+			height: 30px;
 			display: flex;
 			.text{
 				flex-basis:50%; 
 			}
 		}
+		.input-container{
+			padding: 10px 10px;
+		}
 	}
 	.services{
 		flex-basis:66.66%;
-		height: 30px;
+		height: calc(100vh - 60px);
 	}
 }
