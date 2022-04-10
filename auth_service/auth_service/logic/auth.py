@@ -1,5 +1,6 @@
 import logging
 import bcrypt
+from auth_service.schemas.base import FunctionRespons, TypeRespons
 import jwt
 
 from jwt import ExpiredSignatureError
@@ -7,27 +8,27 @@ from jwt import ExpiredSignatureError
 from datetime import datetime, timedelta
 
 from auth_service.models import User
-from auth_service.schemas.auth import Login, Tokens
+from auth_service.schemas.auth import Login, ResponseLogin, Tokens
 from auth_service import settings
 
 logger = logging.getLogger(__name__)
 
-async def login(data: Login):
+async def login(data: Login)->FunctionRespons:
     try:
         logger.debug(f"login input data: {data.dict()}")
-        u = await User.objects.get_or_none(UserName=data.name)
+        u = await User.objects.get_or_none(name=data.name)
         if not u:
             logger.error(f"user not found")
-            return {"status":"error", "detail":"user not found"}
-        if bcrypt.checkpw(data.password.encode('utf-8'),u.UserPassword.encode('utf-8')):
+            return FunctionRespons(status = TypeRespons.ERROR, detail='user not found')
+        if bcrypt.checkpw(data.password.encode('utf-8'),u.password.encode('utf-8')):
             encoded_jwt = await create_tokens(u.id)
-            result = {"token":encoded_jwt.access, "userId":u.id,"userLavel":u.UserLevel}
-            logger.info(f"login user: {u.UserName}, id: {u.id}")
-            return {"status":"ok","data":{"refresh":encoded_jwt.refresh, "response": result}}
-        return {"status":"error", "detail":"invalid data"}
+            result = ResponseLogin(token=encoded_jwt.access, userId=u.id, userLevel=u.level)
+            logger.info(f"login user: {u.name}, id: {u.id}")
+            return FunctionRespons(status = TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
+        return FunctionRespons(status = TypeRespons.ERROR, detail='invalid data')
     except Exception as e:
         logger.error(f"user does not exist. detail: {e}")
-        return {"status":"error", "detail":e}
+        return FunctionRespons(status = TypeRespons.ERROR, detail=str(e))
 
 async def create_tokens(user_id:int)->Tokens:
     access_toket_expire = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -69,7 +70,7 @@ async def auth(Authorization):
             return {'type':'outdated_jwt'}
         user = await User.objects.get(id=data['user_id'])
         logger.info(f"the user is logged in. id:{data['user_id']}")
-        return {'type':'ok', 'user_id':data['user_id'], 'user_level':user.UserLevel}
+        return {'type':'ok', 'user_id':data['user_id'], 'user_level':user.level}
     except ExpiredSignatureError as e:
         return {'type':'outdated_jwt', 'detail':e}
     except Exception as e:
@@ -86,7 +87,7 @@ async def refresh_token(token: str):
             return {'type':'outdated_jwt'}
         u = await User.objects.get_or_none(id=data["user_id"])
         encoded_jwt = await create_tokens(u.id)
-        result = {"token":encoded_jwt.access, "userId":u.id,"userLavel":u.UserLevel}
+        result = {"token":encoded_jwt.access, "userId":u.id,"userLavel":u.level}
         logger.info(f"login user: {u.UserName}, id: {u.id}")
         return {"status":"ok","data":{"refresh":encoded_jwt.refresh, "response": result}}
     except Exception as e:

@@ -5,22 +5,23 @@ import logging
 
 from auth_service.dbormar import metadata, database, engine
 from auth_service.api.auth import router as router_auth
+from auth_service.api.user import router as router_user
 from auth_service.settings import MEDIA_ROOT, MEDIA_URL, DEBUG, ORIGINS
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI();
+app = FastAPI()
 
-if DEBUG:
-    app.mount("/media", StaticFiles(directory=MEDIA_ROOT), name="media")
-else:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=ORIGINS,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+# if DEBUG:
+#     app.mount("/media", StaticFiles(directory=MEDIA_ROOT), name="media")
+# else:
+#     app.add_middleware(
+#         CORSMiddleware,
+#         allow_origins=ORIGINS,
+#         allow_credentials=True,
+#         allow_methods=["*"],
+#         allow_headers=["*"],
+#     )
 
 app.state.database = database
 
@@ -38,3 +39,4 @@ async def shutdown() -> None:
         await database_.disconnect()
 
 app.include_router(router_auth)
+app.include_router(router_user)
