@@ -2,6 +2,8 @@ import ormar
 from auth_service.dbormar import BaseMeta
 import datetime
 from typing import Type, TypeVar, List, Optional, Any
+
+from auth_service.schemas.image import TypeBackground
 from .schemas.auth import TypeResponse, TypeGrant
 
 # Create your models here.
@@ -73,3 +75,24 @@ class AuthCode(ormar.Model):
     expires_at: datetime.datetime = ormar.DateTime()
     challenge: str = ormar.String(max_length=128)
     challenge_method: str = ormar.String(max_length=6)
+
+class Image(ormar.Model):
+    class Meta(BaseMeta):
+        pass
+
+    id: int = ormar.Integer(primary_key=True)
+    title: str = ormar.String(max_length=200)
+    image: str = ormar.String(max_length=1000)
+    user: User = ormar.ForeignKey(User, related_name="images")
+
+class ImageBackground(ormar.Model):
+    class Meta(BaseMeta):
+        pass
+
+    id: int = ormar.Integer(primary_key=True)
+    type: TypeBackground = ormar.String(max_length=10, default="base")
+    image: Image = ormar.ForeignKey(Image, related_name="background")
+    user: User = ormar.ForeignKey(User, related_name="background")
+
+
+

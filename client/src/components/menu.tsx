@@ -1,9 +1,12 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { useTypeSelector } from "../hooks/useTypeSelector";
+import { IMenuState } from "../store/reducers/menuReducer";
 
 export const Menu:React.FC = () =>{
 	const dispatch = useDispatch()
+	const menuData:IMenuState = useTypeSelector(state=>state.menu)
 
 	const logout = ():void =>{
 		dispatch({type:"LOGOUT"});
@@ -12,7 +15,7 @@ export const Menu:React.FC = () =>{
 	return(
 		<>
 		<div className="top-menu">
-			<h1>{}</h1>
+			<h1>{menuData.title || ""}</h1>
 		</div>
 		<div className="navigation">
 			<ul>
@@ -26,6 +29,12 @@ export const Menu:React.FC = () =>{
 					<NavLink to="/settings">
 						<span className="icon"><i className="fas fa-cogs"></i></span>
 						<span className="title">Settings</span>
+					</NavLink>
+				</li>
+				<li>
+					<NavLink to="/gallery">
+						<span className="icon"><i className="fas fa-image"></i></span>
+						<span className="title">galery</span>
 					</NavLink>
 				</li>
 				<li>

@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 # from .images.fon import getBackgroundUser
 
 # from SmartHome import settings
-from auth_service.schemas.user import UserForm, UserSchema, EditUserConfigSchema, MenuElementsSchema, UserEditSchema, UserConfigSchema
+from auth_service.schemas.user import UserForm, UserSchema, UserEditSchema
 from auth_service.models import User
 # from SmartHome.logic.homePage import lookForPage
 # from SmartHome.logic.email import send_email

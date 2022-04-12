@@ -1,0 +1,102 @@
+.gallery{
+	position: relative;
+	padding: 10px;
+	.galleryContent{
+		padding-top: 10px;
+	}
+}
+.cartImageInput{
+	width: 100%;
+	background: var(--color-base);
+	color: var(--text-base);
+	border-radius: 4px;
+	position: relative;
+	h2{
+		font-size: 24px;
+		text-align: center;
+		padding: 5px;
+	}
+	input[type="file"]{
+		display: none;
+	}
+	.btnConteiner{
+		display: flex;
+		.btn{
+			width: 150px;
+		}
+	}
+	.fileList{
+		display: flex;
+		flex-wrap: wrap;
+		padding: .5rem;
+		.image-preview{
+			margin-right: .5rem;
+			width: 180px;
+			height: 100px;
+			margin-bottom: .5rem;
+			position: relative;
+			overflow: hidden;
+			img{
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			&:hover > .preview-remove
+			{
+   				opacity: 1;
+			}
+			&:hover > .preview-info
+			{
+				transform: none
+			}
+			.preview-remove{
+				width: 20px;
+				height: 20px;
+				position: absolute;
+				right: 0;
+				top:0;
+				font-weight: bold;
+				background: var(--color-normal-glass);
+				color: var(--text-normal);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				opacity: 0;
+				transition: .5s;
+			}
+			.preview-info{
+				min-height: 25px;
+				position: absolute;
+				right: 0;
+				left: 0;
+				font-size: 0.8rem;
+				color: var(--text-normal);
+				background: var(--color-normal-glass);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 5px;
+				transition: transform .5s;
+				bottom:0;
+				transform: translateY(100%);
+			}
+			&.removeing{
+				animation: animateRemoveing 0.3s linear infinite;
+			}
+		}
+	}
+}
+
+
+@keyframes animateRemoveing{
+	0%{
+		opacity: 1;
+	}
+	100%{
+		opacity: 0;
+	}
+}

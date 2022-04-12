@@ -26,7 +26,7 @@ export const ProfileEditPage:React.FC = () =>{
 	},[error, clearError])
 
 	const getUser = useCallback(async () => {
-		const data = await request("/api/user/get", methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
+		const data = await request("/api/users", methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
 		if (data)
 			setUser({
 				id: data.id,
@@ -52,7 +52,7 @@ export const ProfileEditPage:React.FC = () =>{
 			surname: user.surname,
 			email: user.email
 		}
-		await request("/api/user/edit", methods.POST, data, {Authorization: `Bearer ${dataAuth.token}`})
+		await request("/api/users", methods.PUT, data, {Authorization: `Bearer ${dataAuth.token}`})
 	}
 
 	if (loading)

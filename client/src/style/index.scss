@@ -1,4 +1,5 @@
 $z-index: (
+  alert              : 999,
   modal              : 200,
   navigation-top     : 120,
   navigation         : 100,
@@ -12,8 +13,10 @@ $z-index: (
 body{
 	--color-base: #333;
 	--color-base-v2: #555;
+	--color-base-glass: #5557;
 	--color-normal: #777;
 	--color-normal-v2: #999;
+	--color-normal-glass: #9997;
 	--color-active: #1E90FF;
   --text-base: #fff;
   --text-normal: #fff;
@@ -23,6 +26,8 @@ body{
 @import "menu.scss";
 @import "profile.scss";
 @import "loading.scss";
+@import "gallery.scss";
+@import "alert.scss";
 
 .container{
     position: relative;
@@ -33,12 +38,13 @@ body{
 
 .separation{
   border-bottom: 1px solid var(--color-normal-v2);
-  color: var(--color-normal-v2);
+  color: var(--text-normal);
   text-align: center;
   margin: 0 10px;
 }
 
 .btn{
+  box-sizing: content-box;
   margin: 10px;
   display: block;
   width: calc(100% - 20px);
@@ -62,6 +68,11 @@ body{
   &:active{
     box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
     filter: brightness(90%);
+  }
+  &.border{
+    background: transparent;
+    border: 2px solid var(--color-active);
+    color: var(--color-active);
   }
 }
 

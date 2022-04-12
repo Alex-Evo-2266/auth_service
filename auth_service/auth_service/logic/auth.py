@@ -1,6 +1,6 @@
 import logging
 import bcrypt
-from auth_service.schemas.base import FunctionRespons, TypeRespons
+from auth_service.schemas.base import FunctionRespons, TokenData, TypeRespons
 import jwt
 
 from jwt import ExpiredSignatureError
@@ -56,7 +56,7 @@ async def create_token(data: dict, expires_delta: timedelta = timedelta(minutes=
     encoded_jwt = jwt.encode(to_encode, secret, algorithm = settings.ALGORITHM)
     return encoded_jwt
 
-async def auth(Authorization):
+async def auth(Authorization)->FunctionRespons:
     try:
         head = Authorization
         jwtdata = head
@@ -64,17 +64,17 @@ async def auth(Authorization):
         data = jwt.decode(jwtdata,settings.SECRET_JWT_KEY,algorithms=[settings.ALGORITHM])
         if not('exp' in data and 'user_id' in data and data['sub'] == "access"):
             logger.worning(f"no data in jwt")
-            return {'type':'error'}
+            return FunctionRespons(status = TypeRespons.ERROR, detail="no data in jwt")
         if (datetime.utcnow() > datetime.fromtimestamp(data['exp'])):
             logger.debug(f"outdated jwt")
-            return {'type':'outdated_jwt'}
+            return FunctionRespons(status = TypeRespons.INVALID, detail="outdated_jwt")
         user = await User.objects.get(id=data['user_id'])
         logger.info(f"the user is logged in. id:{data['user_id']}")
-        return {'type':'ok', 'user_id':data['user_id'], 'user_level':user.level}
+        return FunctionRespons(status = TypeRespons.OK, data = TokenData(user_id = data['user_id'], user_level = user.level))
     except ExpiredSignatureError as e:
-        return {'type':'outdated_jwt', 'detail':e}
+        return FunctionRespons(status = TypeRespons.INVALID, detail = f"outdated_jwt {e}")
     except Exception as e:
-        return {'type':'error', 'detail':e}
+        return FunctionRespons(status = TypeRespons.ERROR, detail = str(e))
 
 async def refresh_token(token: str)->FunctionRespons:
     try:

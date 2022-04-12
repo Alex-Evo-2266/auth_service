@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import { AuthPage } from "./pages/authPage"
+import { GalleryPage } from "./pages/gallery"
 import { ProfileEditPage } from "./pages/profile/editUserPage"
 import { ProfilePage } from "./pages/profile/profilePage"
 import { ProfileRootComponent } from "./pages/profile/profileRootComponent"
@@ -16,6 +17,7 @@ export const useRoutes = (isAuthenticated:boolean)=>{
               <Route index element={<ProfilePage/>}/>
               <Route path="edit" element={<ProfileEditPage/>}/>
             </Route>
+            <Route path="gallery" element={<GalleryPage/>}/>
             <Route path="/*" element={<Navigate replace to="/profile" />} />
           </Route>:
           <>

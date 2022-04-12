@@ -26,15 +26,14 @@ SECRET_REFRESH_JWT_KEY = "dxkhbgefrthjyuvligukytrtyug5hth56"
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SERVER_CONFIG = os.path.join(BASE_DIR, "files","server-config.yml")
-DEVICETYPES = os.path.join(BASE_DIR, "files","devTypes.yml")
-SCRIPTS_DIR = os.path.join(BASE_DIR, "files","scripts")
 STYLES_DIR = os.path.join(BASE_DIR, "files","styles")
-PAGES_DIR =  os.path.join(BASE_DIR, "files","pages")
-DEVICES = os.path.join(BASE_DIR, "files","devices.yml")
 
 TIME_UPPDATA = 6
 LENGTHPASS = 10
 
 MEDIA_URL = '/media/'
+IMAGE_URL = os.path.join(MEDIA_URL, 'image')
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-BACKGROUND_DIR = os.path.join(MEDIA_ROOT, 'backgrounds')
+IMAGE_DIR = os.path.join(MEDIA_ROOT, 'image')
+HOST = "localhost:5000"
