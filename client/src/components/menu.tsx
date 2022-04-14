@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { useTypeSelector } from "../hooks/useTypeSelector";
-import { IMenuState } from "../store/reducers/menuReducer";
+import { IMenuState, MenuTypesActions } from "../store/reducers/menuReducer";
 
 export const Menu:React.FC = () =>{
 	const dispatch = useDispatch()
@@ -15,9 +15,12 @@ export const Menu:React.FC = () =>{
 	return(
 		<>
 		<div className="top-menu">
+			<div className={`menu-button ${(menuData.visible)?"active":""}`} onClick={()=>dispatch({type: MenuTypesActions.MENU_TOGLE})}>
+				<i className="fas fa-bars"></i>
+			</div>
 			<h1>{menuData.title || ""}</h1>
 		</div>
-		<div className="navigation">
+		<div className={`navigation ${(menuData.visible)?"active":""}`}>
 			<ul>
 				<li>
 					<NavLink to="/profile">

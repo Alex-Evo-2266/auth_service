@@ -4,6 +4,8 @@ import {ImagesInput} from '../components/inputImages'
 import { useTypeSelector } from '../hooks/useTypeSelector'
 import { useDispatch } from 'react-redux'
 import { MenuTypesActions } from '../store/reducers/menuReducer'
+import { AlertType, AlertTypeAction } from '../store/reducers/alertReducer'
+import { DialogType, DialogTypeAction } from '../store/reducers/dialogReducer'
 
 interface IUrls{
 	id: number
@@ -26,9 +28,11 @@ export const GalleryPage:React.FC = () => {
 		}
 	},[authData.token,request])
 
-  const deleteImg = async (id:number)=>{
-    await request(`/api/images/${id}`, methods.DELETE, null,{Authorization: `Bearer ${authData.token}`})
-    await getUrl()
+  const deleteImg = (id:number)=>{
+    dispatch({type: DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"Delete image", text:"delete image?", callback:async()=>{
+      await request(`/api/images/${id}`, methods.DELETE, null,{Authorization: `Bearer ${authData.token}`})
+      await getUrl()
+    }}})
   }
 
   const ditail = (event:React.MouseEvent<HTMLDivElement>, item:IUrls)=>{
@@ -41,7 +45,7 @@ export const GalleryPage:React.FC = () => {
 
   useEffect(()=>{
     if (!error) return ;
-    console.error(error)
+			dispatch({type:AlertTypeAction.ALERT_SHOW, payload:{type:AlertType.ERROR, title: "fetch error", text:error}})
     return ()=>{
       clearError();
     }
@@ -59,7 +63,7 @@ export const GalleryPage:React.FC = () => {
         (urls&&urls[0])?
         urls.map((item,index)=>{
           return(
-            <div key={index} className="imageBx" onClick={(event)=>ditail(event, item)}>
+            <div key={index} className="image-preview gallery-image" onClick={(event)=>ditail(event, item)}>
               <img src={item.image} alt={item.title} data-type="rootimg"/>
               <div className="preview-remove" onClick={()=>deleteImg(item.id)}>
               <i className="fas fa-times"></i>

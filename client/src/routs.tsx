@@ -17,8 +17,9 @@ export const useRoutes = (isAuthenticated:boolean)=>{
               <Route index element={<ProfilePage/>}/>
               <Route path="edit" element={<ProfileEditPage/>}/>
             </Route>
+            <Route index element={<Navigate replace to="/profile" />}/>
             <Route path="gallery" element={<GalleryPage/>}/>
-            <Route path="/*" element={<Navigate replace to="/profile" />} />
+           <Route path="/*" element={<Navigate replace to="/profile" />} />
           </Route>:
           <>
            <Route path="/" element={<AuthPage/>}/>

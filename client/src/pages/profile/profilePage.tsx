@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { Loading } from "../../components/loading";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { IAuthState } from "../../interfaces/authInterfaces";
 import { IUser } from "../../interfaces/profile";
+import { AlertType, AlertTypeAction } from "../../store/reducers/alertReducer";
 
 export const ProfilePage:React.FC = () =>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const { request, error, clearError, loading } = useHttp()
+	const dispatch = useDispatch()
 	const [user, setUser] = useState<IUser>({
 		id: null,
 		name: '',
@@ -20,7 +23,7 @@ export const ProfilePage:React.FC = () =>{
 
 	useEffect(()=>{
 		if (error)
-			console.error(error)
+			dispatch({type:AlertTypeAction.ALERT_SHOW, payload:{type:AlertType.ERROR, title: "fetch error", text:error}})
     	return ()=>{
      		clearError();
     	}

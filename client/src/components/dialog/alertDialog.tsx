@@ -31,8 +31,8 @@ export const AlertDialog:React.FC = () =>{
 				<div className="text">{dialog.text}</div>
 			</div>
 			<div className="dialog_btn_container">
-				<button className="btn min" onClick={cancel}>cancel</button>
-				<button className="btn min" onClick={click}>ok</button>
+				<button className="btn" onClick={cancel}>cancel</button>
+				<button className="btn" onClick={click}>ok</button>
 			</div>
 		</div>
 	)

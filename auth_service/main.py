@@ -7,6 +7,7 @@ from auth_service.dbormar import metadata, database, engine
 from auth_service.api.auth import router as router_auth
 from auth_service.api.image import router as router_image
 from auth_service.api.user import router as router_user
+from auth_service.api.user_config import router as router_config
 from auth_service.settings import MEDIA_ROOT, MEDIA_URL, DEBUG, ORIGINS
 
 logger = logging.getLogger(__name__)
@@ -42,3 +43,4 @@ async def shutdown() -> None:
 app.include_router(router_auth)
 app.include_router(router_image)
 app.include_router(router_user)
+app.include_router(router_config)

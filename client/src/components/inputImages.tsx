@@ -1,7 +1,9 @@
 import React, {useEffect,useContext,useRef,useState} from 'react'
+import { useDispatch } from 'react-redux';
 import {methods, useHttp} from '../hooks/http.hook'
 import { useTypeSelector } from '../hooks/useTypeSelector';
 import { IAuthState } from '../interfaces/authInterfaces';
+import { AlertType, AlertTypeAction } from '../store/reducers/alertReducer';
 
 interface ImagesInputProps{
   update: ()=>void
@@ -11,6 +13,7 @@ export const ImagesInput:React.FC<ImagesInputProps> = ({update}) =>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
   const {request, error, clearError} = useHttp();
   const inputRef = useRef<HTMLInputElement>(null)
+  const dispatch = useDispatch()
   const imgConteiner = useRef<HTMLDivElement>(null)
   const [filesArr,setFiles] = useState<File[]>([])
 
@@ -88,7 +91,7 @@ export const ImagesInput:React.FC<ImagesInputProps> = ({update}) =>{
 
   useEffect(()=>{
     if (!error) return ;
-    console.error(error)
+			dispatch({type:AlertTypeAction.ALERT_SHOW, payload:{type:AlertType.ERROR, title: "fetch error", text:error}})
     return ()=>{
       clearError();
     }

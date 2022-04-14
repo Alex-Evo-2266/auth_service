@@ -49,7 +49,9 @@ async def delete_image(user_id:int, image_id:int):
 		background = await ImageBackground.objects.all(image=image)
 		for item in background:
 			await item.delete()
+		file_path = os.path.join(IMAGE_DIR, image.title)
 		await image.delete()
+		os.remove(file_path)
 		return FunctionRespons(status=TypeRespons.OK)
 	except Exception as e:
 		return FunctionRespons(status = TypeRespons.ERROR, detail=str(e))

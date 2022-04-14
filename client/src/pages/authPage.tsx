@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react'
 import { useDispatch } from 'react-redux';
 // import {Link} from 'react-router-dom'
 import {methods, useHttp} from '../hooks/http.hook'
+import { AlertType, AlertTypeAction } from '../store/reducers/alertReducer';
 
 export const AuthPage = function (){
 	const dispatch = useDispatch()
@@ -12,7 +13,7 @@ export const AuthPage = function (){
 
 	useEffect(()=>{
 		if (error)
-			console.error(error)
+			dispatch({type:AlertTypeAction.ALERT_SHOW, payload:{type:AlertType.ERROR, title: "fetch error", text:error}})
     	return ()=>{
      		clearError();
     	}
