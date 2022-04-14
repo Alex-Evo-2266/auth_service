@@ -23,11 +23,13 @@ body{
   --text-active: #fff;
 }
 
+@import "scrol.scss";
 @import "menu.scss";
 @import "profile.scss";
 @import "loading.scss";
 @import "gallery.scss";
 @import "alert.scss";
+@import "dialog.scss";
 
 .container{
     position: relative;
@@ -73,6 +75,18 @@ body{
     background: transparent;
     border: 2px solid var(--color-active);
     color: var(--color-active);
+  }
+  &.min{
+    color: var(--color-active);
+    background: transparent;
+    box-shadow: none;
+    &:hover{
+      filter: brightness(90%);
+    }
+    &:active{
+      box-shadow: inset 0px 5px 5px -3px rgba(0, 0, 0, 0.2), inset 0px 4px 5px 0px rgba(0, 0, 0, 0.14), inset 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+      filter: brightness(90%);
+    }
   }
 }
 

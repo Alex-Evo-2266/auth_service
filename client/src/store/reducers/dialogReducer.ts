@@ -1,7 +1,6 @@
 export enum DialogType {
-	INFO = "INFO",
+	ALERT = "ALERT",
 	TEXT = "TEXT",
-	CHOICE = "CHOICE",
 	CONFIRMATION = "CONFIRMATION"
 }
 
@@ -13,17 +12,24 @@ export enum DialogTypeAction {
 export interface IDialogData{
 	type: DialogType
 	title: string
-	text: string
+	text?: string
 	callback?: (data: any)=>void
+	cancel?: ()=>void
 	items?: any[]
+}
+
+interface IItem{
+	title: string
+	data: any
 }
 
 interface IDialogState{
 	type: DialogType
 	title: string
-	text: string
+	text?: string
 	callback?: (data: any)=>void
-	items?: any[]
+	cancel?: ()=>void
+	items?: IItem[]
 	visible: boolean
 }
 
@@ -33,7 +39,7 @@ interface IAction {
 }
 
 const initialSate:IDialogState = {
-	type: DialogType.INFO,
+	type: DialogType.ALERT,
 	title: "",
 	visible: false,
 	text: ""
