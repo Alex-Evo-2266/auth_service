@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { Alert } from "../components/alert";
 import { DialogMessage } from "../components/dialog/dialog";
 import { Menu } from "../components/menu";
+import { useAlert } from "../hooks/alert.hook";
 import { methods, useHttp } from "../hooks/http.hook";
 import { useTypeSelector } from "../hooks/useTypeSelector";
 import { AlertType, AlertTypeAction } from "../store/reducers/alertReducer";
@@ -13,6 +14,7 @@ export const RootComponents:React.FC = () =>{
 	const {request, error, clearError} = useHttp()
 	const dataAuth = useTypeSelector(state => state.auth)
 	const dispatch = useDispatch()
+	const alert = useAlert()
 	const dataConfig = useTypeSelector(state => state.userConfig)
 
 	const getData = useCallback(async()=>{
@@ -22,7 +24,7 @@ export const RootComponents:React.FC = () =>{
 
 	useEffect(()=>{
 		if (!error) return ;
-				dispatch({type:AlertTypeAction.ALERT_SHOW, payload:{type:AlertType.ERROR, title: "fetch error", text:error}})
+			alert.show(AlertType.ERROR, "fetch error", error)
 		return ()=>{
 			clearError();
 		}
@@ -42,9 +44,7 @@ export const RootComponents:React.FC = () =>{
 			<Alert/>
 			<DialogMessage/>
 			<main className="root-container">
-				<div className="container">
-					<Outlet/>
-				</div>
+				<Outlet/>
 			</main>
 		</>
 	)

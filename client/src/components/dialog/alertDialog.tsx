@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { DialogType, DialogTypeAction } from "../../store/reducers/dialogReducer";
@@ -6,15 +6,10 @@ import { DialogType, DialogTypeAction } from "../../store/reducers/dialogReducer
 export const AlertDialog:React.FC = () =>{
 	const dialog = useTypeSelector(state=>state.dialog)
 	const dispatch = useDispatch()
-	const [text, setText] = useState<string>("")
-
-	const change = (event:React.ChangeEvent<HTMLInputElement>)=>{
-		setText(event.target.value)
-	}
 
 	const click = ()=>{
 		if (typeof(dialog.callback) === "function")
-			dialog.callback(text)
+			dialog.callback(null)
 		dispatch({type:DialogTypeAction.DIALOG_HIDE})
 	}
 

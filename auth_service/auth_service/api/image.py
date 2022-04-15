@@ -37,7 +37,7 @@ async def add(imageId:int, auth_data: TokenData = Depends(token_dep)):
 		return "ok"
 	return JSONResponse(status_code=400, content={"message": res.detail})
 
-@router.get("/{imageId}/backgrounds/{type}")
+@router.get("/{imageId}/set/{type}")
 async def add(imageId:int, type:TypeBackground, auth_data: TokenData = Depends(token_dep)):
 	res = await linc_bakground(auth_data.user_id, imageId, type)
 	if res.status == TypeRespons.OK:

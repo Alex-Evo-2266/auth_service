@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import { AuthPage } from "./pages/authPage"
-import { GalleryPage } from "./pages/gallery"
+import { GalleryPage } from "./pages/gallery/gallery"
 import { ProfileEditPage } from "./pages/profile/editUserPage"
 import { ProfilePage } from "./pages/profile/profilePage"
 import { ProfileRootComponent } from "./pages/profile/profileRootComponent"

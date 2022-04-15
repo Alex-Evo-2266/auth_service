@@ -82,7 +82,7 @@ class Image(ormar.Model):
 
     id: int = ormar.Integer(primary_key=True)
     title: str = ormar.String(max_length=200)
-    image: str = ormar.String(max_length=1000)
+    url: str = ormar.String(max_length=200)
     user: User = ormar.ForeignKey(User, related_name="images")
 
 class ImageBackground(ormar.Model):

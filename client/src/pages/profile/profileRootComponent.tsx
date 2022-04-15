@@ -11,12 +11,15 @@ export const ProfileRootComponent:React.FC = () =>{
 	},[dispatch])
 	
 	return(
-		<div className="profile-container">
-			<div className="profile">
-				<Outlet/>
-			</div>
-			<div className="services">
+		<div className="container">
+			<div className="profile-container">
+				<div className="profile">
+					<Outlet/>
+				</div>
+				<div className="services">
+				</div>
 			</div>
 		</div>
+		
 	)
 }

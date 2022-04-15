@@ -18,7 +18,7 @@ async def add_image(file: UploadFile, user_id: int)->FunctionRespons:
 			return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
 		with open(IMAGE_DIR + os.sep + file.filename, 'wb') as buff:
 			shutil.copyfileobj(file.file, buff)
-		await Image.objects.create(title = file.filename, image=IMAGE_URL + os.sep + file.filename, user=user)
+		await Image.objects.create(title = file.filename, url=IMAGE_URL + os.sep + file.filename, user=user)
 		logger.info(f"add new image. user: {user.id}, image name: {file.filename}")
 		return FunctionRespons(status = TypeRespons.OK)
 	except Exception as e:
