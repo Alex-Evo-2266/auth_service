@@ -88,6 +88,9 @@ export const DetailImage:React.FC<DetailImageProps> = (props)=>{
 				<span className="prev" onClick={prev}><i className="fas fa-arrow-left"></i></span>
 				<div className="image-content">
 					<img src={props.image.url} alt={props.image.title} />
+					<div className="title">
+						<p>{props.image.title}</p>
+					</div>
 					<div className="image-control btn_container">
 						<button className="btn" onClick={setBackground}>set as background</button>
 						<button className="btn" onClick={setProfile}>set to profile</button>

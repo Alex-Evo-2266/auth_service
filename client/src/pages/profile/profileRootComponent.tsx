@@ -9,9 +9,8 @@ export const ProfileRootComponent:React.FC = () =>{
 	useEffect(()=>{
 		dispatch({type:MenuTypesActions.MENU_SET_NAME, payload:{title: "Profile"}})
 	},[dispatch])
-	
+
 	return(
-		<div className="container">
 			<div className="profile-container">
 				<div className="profile">
 					<Outlet/>
@@ -19,7 +18,5 @@ export const ProfileRootComponent:React.FC = () =>{
 				<div className="services">
 				</div>
 			</div>
-		</div>
-		
 	)
 }
