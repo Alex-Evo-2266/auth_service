@@ -67,7 +67,9 @@ export const DetailImage:React.FC<DetailImageProps> = (props)=>{
 	}
 
 	const setProfile = ()=>{
-
+		dispatch({type:DialogTypeAction.DIALOG_SHOW, payload:{type: DialogType.ALERT, title: "Set profile", text:"set image profile?", callback:async(data:any)=>{
+			await request(`/api/images/${props.image.id}/profile/set`, methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
+		}}})
 	}
 
 	useEffect(()=>{

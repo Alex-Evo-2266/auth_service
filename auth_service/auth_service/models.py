@@ -17,6 +17,7 @@ class User(ormar.Model):
     password: str = ormar.String(max_length=200, nullable=False)
     email: str = ormar.String(max_length=200, nullable=False)
     level: int = ormar.Integer(default=1)
+    profile_image: int = ormar.Integer(nullable=False)
     Style: str = ormar.String(max_length=200, default="light")
     auteStyle: bool = ormar.Boolean(default=True)
     staticBackground: bool = ormar.Boolean(default=False)

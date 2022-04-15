@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 # from SmartHome import settings
 from auth_service.schemas.user import UserForm, UserSchema, UserEditSchema
-from auth_service.models import User
+from auth_service.models import Image, User
 # from SmartHome.logic.homePage import lookForPage
 # from SmartHome.logic.email import send_email
 
@@ -37,13 +37,17 @@ async def getUser(id)->FunctionRespons:
     if not user:
         logger.error(f"none user")
         return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
+    image = await Image.objects.get_or_none(id=user.profile_image)
+    url = None
+    if image:
+        url = image.url
     return FunctionRespons(status=TypeRespons.OK, data=UserSchema(
         id=user.id,
         name=user.name,
         surname=user.surname,
         email=user.email,
         level=user.level,
-        imageURL=None
+        imageURL=url
     ))
 
 async def editUser(id: int,data: UserEditSchema)->FunctionRespons:
@@ -76,13 +80,17 @@ async def getUsers()->FunctionRespons:
         logger.error(f"none users")
         return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
     for item in users:
+        image = await Image.objects.get_or_none(id=item.profile_image)
+        url = None
+        if image:
+            url = image.url
         outUsers.append(UserSchema(
             id=item.id,
             name=item.UserName,
             surname=item.UserSurname,
             email=item.UserEmail,
             level=item.UserLevel,
-            imageURL=None
+            imageURL=url
         ))
     return FunctionRespons(status = TypeRespons.OK, data=outUsers)
 

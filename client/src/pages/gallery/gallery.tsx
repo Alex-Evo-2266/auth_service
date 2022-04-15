@@ -45,12 +45,24 @@ export const GalleryPage:React.FC = () => {
 
   const next = ()=>{
     if (image)
+    {
+      let index = images.indexOf(image)
+      if((images.length - 1) <= index)
+      setImage(images[0])
+      else
       setImage(images[images.indexOf(image) + 1])
+    }
 	}
 
 	const prev = ()=>{
 		if (image)
-      setImage(images[images.indexOf(image) - 1])
+    {
+      let index = images.indexOf(image)
+      if(index <= 0)
+        setImage(images[images.length - 1])
+      else
+        setImage(images[images.indexOf(image) - 1])
+    }
 	}
 
 	useEffect(()=>{

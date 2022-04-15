@@ -1,5 +1,5 @@
 from auth_service.depends.auth import token_dep
-from auth_service.logic.image import add_image, delete_image, get_bacground, get_images, linc_bakground
+from auth_service.logic.image import add_image, delete_image, get_bacground, get_images, linc_bakground, set_profile_image
 from auth_service.logic.user import addUser, deleteUser, editUser, getUser, getUsers
 from auth_service.models import Image
 from auth_service.schemas.base import TokenData, TypeRespons
@@ -47,6 +47,13 @@ async def add(imageId:int, type:TypeBackground, auth_data: TokenData = Depends(t
 @router.get("/backgrounds")
 async def add(auth_data: TokenData = Depends(token_dep)):
 	res = await get_bacground(auth_data.user_id)
+	if res.status == TypeRespons.OK:
+		return "ok"
+	return JSONResponse(status_code=400, content={"message": res.detail})
+
+@router.get("/{imageId}/profile/set")
+async def setprofileimage(imageId: int, auth_data: TokenData = Depends(token_dep)):
+	res = await set_profile_image(auth_data.user_id, imageId)
 	if res.status == TypeRespons.OK:
 		return "ok"
 	return JSONResponse(status_code=400, content={"message": res.detail})

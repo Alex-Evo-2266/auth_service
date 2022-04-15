@@ -49,6 +49,9 @@ async def delete_image(user_id:int, image_id:int):
 		background = await ImageBackground.objects.all(image=image)
 		for item in background:
 			await item.delete()
+		if user.profile_image == image.id:
+			user.profile_image = -1
+			await user.update(_columns=["profile_image"])
 		file_path = os.path.join(IMAGE_DIR, image.title)
 		await image.delete()
 		os.remove(file_path)
@@ -81,5 +84,16 @@ async def get_bacground(user_id:int)->FunctionRespons:
 		user = await User.objects.get_or_none(id = user_id)
 		backgrounds = await ImageBackground.objects.all(user=user)
 		return FunctionRespons(status=TypeRespons.OK, data=backgrounds)
+	except Exception as e:
+		return FunctionRespons(status = TypeRespons.ERROR, detail=str(e))
+
+async def set_profile_image(user_id:int, id_image:int)->FunctionRespons:
+	try:
+		if not await Image.objects.get_or_none(id = id_image):
+			return FunctionRespons(status = TypeRespons.ERROR, detail="image not found")
+		user = await User.objects.get_or_none(id = user_id)
+		user.profile_image = id_image
+		await user.update(_columns=["profile_image"])
+		return FunctionRespons(status=TypeRespons.OK)
 	except Exception as e:
 		return FunctionRespons(status = TypeRespons.ERROR, detail=str(e))
