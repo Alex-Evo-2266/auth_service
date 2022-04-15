@@ -4,10 +4,9 @@ import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useUserConfig } from "../../hooks/userConfig.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
-import { IImage } from "../../interfaces/ImageInterfaces";
+import { BackgroundTypes, IImage } from "../../interfaces/ImageInterfaces";
 import { AlertType } from "../../store/reducers/alertReducer";
 import { DialogType, DialogTypeAction } from "../../store/reducers/dialogReducer";
-import { BackgroundTypes } from "../../store/reducers/userConfigRedicer";
 
 interface DetailImageProps{
 	image: IImage

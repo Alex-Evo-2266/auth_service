@@ -1,19 +1,8 @@
+import { useBackgraund } from "../../hooks/background.hook"
+import { IBackground } from "../../interfaces/ImageInterfaces"
+
 export enum UserConfigTypesActions {
 	INSERT_USER_CONFIG = "INSERT_USER_CONFIG",
-}
-
-export enum BackgroundTypes {
-	BASE = "BASE",
-	MORNING = "MORNING",
-	DAY = "DAY",
-	EVENING = "EVENING",
-	NIGHT = "NIGHT"
-}
-
-export interface IBackground{
-	url: string
-	type: BackgroundTypes
-	title: string
 }
 
 export interface IUserConfigState{

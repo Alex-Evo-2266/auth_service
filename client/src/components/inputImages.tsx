@@ -70,7 +70,6 @@ export const ImagesInput:React.FC<ImagesInputProps> = ({update}) =>{
       var data = new FormData();
       data.append("file",file)
       data.append('name',file.name)
-      console.log(data)
       const ret = await request(`/api/images/create`, methods.POST, data,{Authorization: `Bearer ${dataAuth.token}`},true)
       if(ret==="ok"){
         const block = imgConteiner?.current?.querySelector(`[data-name="${file.name}"]`)?.closest(".image-preview")

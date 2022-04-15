@@ -9,6 +9,7 @@ import { DialogType, DialogTypeAction } from '../../store/reducers/dialogReducer
 import { useAlert } from '../../hooks/alert.hook'
 import { IImage } from '../../interfaces/ImageInterfaces'
 import { DetailImage } from './detailImage'
+import { useUserConfig } from '../../hooks/userConfig.hook'
 
 export const GalleryPage:React.FC = () => {
 	const dispatch = useDispatch()
@@ -17,6 +18,7 @@ export const GalleryPage:React.FC = () => {
 	const {request, error, clearError} = useHttp();
 	const [images,setImages] = useState<IImage[]>([])
   const [image, setImage] = useState<IImage | null | undefined>(null)
+  const { updata } = useUserConfig()
 
 	const getUrl = useCallback(async()=>{
 		try {
@@ -31,11 +33,11 @@ export const GalleryPage:React.FC = () => {
     dispatch({type: DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"Delete image", text:"delete image?", callback:async()=>{
       await request(`/api/images/${id}`, methods.DELETE, null,{Authorization: `Bearer ${authData.token}`})
       await getUrl()
+      updata()
     }}})
   }
 
-  const ditail = (event:React.MouseEvent<HTMLDivElement>, item:IImage)=>{
-    console.log(item, event)
+  const ditail = (item:IImage)=>{
     setImage(item)
   }
 
@@ -81,8 +83,8 @@ export const GalleryPage:React.FC = () => {
           (images&&images[0])?
           images.map((item,index)=>{
             return(
-              <div key={index} className="image-preview gallery-image" onClick={(event)=>ditail(event, item)}>
-                <img src={item.url} alt={item.title} data-type="rootimg"/>
+              <div key={index} className="image-preview gallery-image">
+                <img src={item.url} alt={item.title} data-type="rootimg" onClick={()=>ditail(item)}/>
                 <div className="preview-remove" onClick={()=>deleteImg(item.id)}>
                   <i className="fas fa-times"></i>
                 </div>
