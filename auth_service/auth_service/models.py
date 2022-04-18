@@ -5,6 +5,7 @@ from typing import Type, TypeVar, List, Optional, Any
 
 from auth_service.schemas.image import TypeBackground
 from .schemas.auth import TypeResponse, TypeGrant
+from pydantic.color import Color
 
 # Create your models here.
 class User(ormar.Model):
@@ -18,23 +19,13 @@ class User(ormar.Model):
     email: str = ormar.String(max_length=200, nullable=False)
     level: int = ormar.Integer(default=1)
     profile_image: int = ormar.Integer(nullable=False)
-    Style: str = ormar.String(max_length=200, default="light")
-    auteStyle: bool = ormar.Boolean(default=True)
-    staticBackground: bool = ormar.Boolean(default=False)
-    # page: str = ormar.String(max_length=200, default="basePage")
+    color: int = ormar.Integer(default=-1)
+    nightColor: int = ormar.Integer(default=-1)
+    autoColorSwitching: bool = ormar.Boolean(default=True)
+    autoBackgroundSwitching: bool = ormar.Boolean(default=False)
 
     def __str__(self):
         return self.UserName
-
-# class ImageBackground(ormar.Model):
-#     class Meta(BaseMeta):
-#         pass
-#
-#     id: int = ormar.Integer(primary_key=True)
-#     type: str = ormar.String(max_length=200, default="base")
-#     title: str = ormar.String(max_length=200)
-#     image: str = ormar.String(max_length=1000)
-#     user: Optional[User] = ormar.ForeignKey(User, related_name="background")
 
 class Client(ormar.Model):
     class Meta(BaseMeta):
@@ -95,5 +86,15 @@ class ImageBackground(ormar.Model):
     image: Image = ormar.ForeignKey(Image, related_name="background")
     user: User = ormar.ForeignKey(User, related_name="background")
 
+class InterfaceColor(ormar.Model):
+    class Meta(BaseMeta):
+        pass
+
+    id: int = ormar.Integer(primary_key=True)
+    user: User = ormar.ForeignKey(User, related_name="colors")
+    title: str = ormar.String(max_length=100)
+    color1: str = ormar.String(max_length=50)
+    color2: str = ormar.String(max_length=50)
+    active: str = ormar.String(max_length=50)
 
 

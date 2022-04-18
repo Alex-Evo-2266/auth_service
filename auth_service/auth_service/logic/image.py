@@ -43,7 +43,7 @@ async def delete_image(user_id:int, image_id:int):
 		if not user:
 			return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
 		if not image:
-			return FunctionRespons(status=TypeRespons.ERROR, detail="image not found")
+			return FunctionRespons(status=TypeRespons.NOT_FOUND, detail="image not found")
 		if image.user != user:
 			return FunctionRespons(status=TypeRespons.ERROR, detail="the image belongs to another user.")
 		background = await ImageBackground.objects.all(image=image)
@@ -66,7 +66,7 @@ async def linc_bakground(user_id: int, image_id: int, type: TypeBackground)->Fun
 		if not user:
 			return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
 		if not image:
-			return FunctionRespons(status=TypeRespons.ERROR, detail="image not found")
+			return FunctionRespons(status=TypeRespons.NOT_FOUND, detail="image not found")
 		if image.user != user:
 			return FunctionRespons(status=TypeRespons.ERROR, detail="the image belongs to another user.")
 		otherBackground = await ImageBackground.objects.all(user=user, type=type)
@@ -90,7 +90,7 @@ async def get_bacground(user_id:int)->FunctionRespons:
 async def set_profile_image(user_id:int, id_image:int)->FunctionRespons:
 	try:
 		if not await Image.objects.get_or_none(id = id_image):
-			return FunctionRespons(status = TypeRespons.ERROR, detail="image not found")
+			return FunctionRespons(status = TypeRespons.NOT_FOUND, detail="image not found")
 		user = await User.objects.get_or_none(id = user_id)
 		user.profile_image = id_image
 		await user.update(_columns=["profile_image"])

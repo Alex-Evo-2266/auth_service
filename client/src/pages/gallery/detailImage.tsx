@@ -61,14 +61,14 @@ export const DetailImage:React.FC<DetailImageProps> = (props)=>{
 			}
 		]
 		dispatch({type:DialogTypeAction.DIALOG_SHOW, payload:{type: DialogType.CONFIRMATION, title: "Type background", items:items, callback:async(data:any)=>{
-			await request(`/api/images/${props.image.id}/set/${data.data}`, methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
+			await request(`/api/background/${data.data}/set/${props.image.id}`, methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
 			await updata()
 		}}})
 	}
 
 	const setProfile = ()=>{
 		dispatch({type:DialogTypeAction.DIALOG_SHOW, payload:{type: DialogType.ALERT, title: "Set profile", text:"set image profile?", callback:async(data:any)=>{
-			await request(`/api/images/${props.image.id}/profile/set`, methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
+			await request(`/api/users/profile/set/${props.image.id}`, methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
 		}}})
 	}
 

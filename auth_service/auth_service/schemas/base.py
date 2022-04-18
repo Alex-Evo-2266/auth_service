@@ -9,6 +9,7 @@ class TypeRespons(str, Enum):
     OK = "ok"
     ERROR = "error"
     INVALID = "invalid"
+    NOT_FOUND = "NOT_FOUND"
 
 class FunctionRespons(BaseModel):
     status: TypeRespons

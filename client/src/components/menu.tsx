@@ -21,7 +21,7 @@ export const Menu:React.FC = () =>{
 			<h1>{menuData.title || ""}</h1>
 		</div>
 		<div className={`navigation ${(menuData.visible)?"active":""}`}>
-			<ul>
+			<ul onClick={()=>dispatch({type: MenuTypesActions.MENU_HIDE})}>
 				<li>
 					<NavLink to="/profile">
 						<span className="icon"><i className="fas fa-user"></i></span>

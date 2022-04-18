@@ -21,7 +21,7 @@ export const useUserConfig = ()=>{
 	  },[error, clearError])
 
 	const updata = useCallback(async ()=>{
-		const data = await request('/api/config', methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
+		const data = await request('/api/users/config', methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
 		dispatch({type: UserConfigTypesActions.INSERT_USER_CONFIG, payload:data})
 	},[])
 

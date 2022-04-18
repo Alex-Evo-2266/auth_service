@@ -6,13 +6,26 @@ import logging
 from auth_service.dbormar import metadata, database, engine
 from auth_service.api.auth import router as router_auth
 from auth_service.api.image import router as router_image
+from auth_service.api.colors import router as router_color
 from auth_service.api.user import router as router_user
-from auth_service.api.user_config import router as router_config
+from auth_service.api.background import router as router_background
 from auth_service.settings import MEDIA_ROOT, MEDIA_URL, DEBUG, ORIGINS
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+app = FastAPI(
+    responses={
+		404: {"description": "Not found"},
+		400: {
+			"description": "Error",
+			"content": {
+				"application/json": {
+					"example": {"message": "detail"}
+				}
+			}
+		}
+	}
+    )
 
 if DEBUG:
     app.mount("/media", StaticFiles(directory=MEDIA_ROOT), name="media")
@@ -43,4 +56,5 @@ async def shutdown() -> None:
 app.include_router(router_auth)
 app.include_router(router_image)
 app.include_router(router_user)
-app.include_router(router_config)
+app.include_router(router_color)
+app.include_router(router_background)

@@ -36,7 +36,7 @@ async def getUser(id)->FunctionRespons:
     user = await User.objects.get_or_none(id=id)
     if not user:
         logger.error(f"none user")
-        return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
+        return FunctionRespons(status = TypeRespons.NOT_FOUND, detail="user not found")
     image = await Image.objects.get_or_none(id=user.profile_image)
     url = None
     if image:
@@ -66,7 +66,7 @@ async def deleteUser(id)->FunctionRespons:
     u = await User.objects.get_or_none(id=id)
     if not u:
         logger.error(f"none user")
-        return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
+        return FunctionRespons(status = TypeRespons.NOT_FOUND, detail="user not found")
     message = "Account deleted name = " + u.UserName
     # await send_email("Account smart home",u.UserEmail,message)
     logger.info(f"user delete. id:{id}. user name:{u.UserName}")
