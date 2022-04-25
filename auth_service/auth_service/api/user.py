@@ -5,7 +5,7 @@ from auth_service.logic.image import set_profile_image
 from auth_service.logic.user import addUser, deleteUser, editUser, getUser, getUsers
 from auth_service.logic.user_config import get_user_config
 from auth_service.schemas.base import TokenData, TypeRespons
-from auth_service.schemas.user import UserEditSchema, UserForm, UserSchema
+from auth_service.schemas.user import TypeTheme, UserEditSchema, UserForm, UserSchema
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
@@ -88,9 +88,9 @@ async def all(auth_data: TokenData = Depends(token_dep)):
         return JSONResponse(status_code=404, content={"message": res.detail})
     return res['data']
 
-@router.get("/color/set/{colorId}")
-async def all(colorId:int, auth_data: TokenData = Depends(token_dep)):
-    res = await set_color(colorId, auth_data.user_id)
+@router.get("/color/{type}/set/{colorId}")
+async def all(type:TypeTheme, colorId:int, auth_data: TokenData = Depends(token_dep)):
+    res = await set_color(type, colorId, auth_data.user_id)
     if res.status == TypeRespons.NOT_FOUND:
         return JSONResponse(status_code=404, content={"message": res.detail})
     if res.status == TypeRespons.ERROR:

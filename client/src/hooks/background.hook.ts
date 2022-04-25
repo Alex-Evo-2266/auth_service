@@ -1,13 +1,6 @@
-import { BackgroundTypes, IBackground } from "../interfaces/ImageInterfaces"
+import { BackgroundTypes, IBackground, Time } from "../interfaces/ImageInterfaces"
 import defFon from '../img/fon-base.jpg'
 import { useCallback } from "react"
-
-enum Time {
-	MORNING = "MORNING",
-	DAY = "DAY",
-	EVENING = "EVENING",
-	NIGHT = "NIGHT"
-}
 
 const defaultBackground:IBackground = {
 	url: defFon,

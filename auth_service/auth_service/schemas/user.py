@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel
 from typing import Optional, List
 
@@ -31,3 +32,6 @@ class UserEditPasswordSchema(BaseModel):
     Old: str
     New: str
     
+class TypeTheme(str, Enum):
+    LIGHT = "LIGHT"
+    NIGHT = "NIGHT"

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTypeSelector } from "../hooks/useTypeSelector";
 import { AlertTypeAction } from "../store/reducers/alertReducer";
@@ -33,6 +33,7 @@ export const Alert:React.FC = () =>{
 		setclousing("closeing")
 		setTimeout(()=>{
 			dispatch({type: AlertTypeAction.ALERT_HIDE})
+			setclousing("")
 		},350)
 	}
 

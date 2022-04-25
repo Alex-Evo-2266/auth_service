@@ -17,3 +17,10 @@ export interface IBackground{
 	type: BackgroundTypes
 	title: string
 }
+
+export enum Time {
+	MORNING = "MORNING",
+	DAY = "DAY",
+	EVENING = "EVENING",
+	NIGHT = "NIGHT"
+}

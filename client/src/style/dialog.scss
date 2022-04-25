@@ -222,3 +222,22 @@
 		}
 	}
 }
+
+.btn_container{
+	display: flex;
+	position: relative;
+	flex-shrink: 0;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	box-sizing: border-box;
+	min-height: 52px;
+	margin: 0;
+	padding: 8px;
+	border-top: 1px solid transparent;
+	.btn{
+		width: auto;
+		margin: 5px;
+		padding: 0 20px;
+	}
+}

@@ -25,7 +25,8 @@ export const AuthPage = function (){
 		setForm({ ...form, [event.target.name]: event.target.value })
 	}
 
-	const loginHandler = async () => {
+	const loginHandler = async (event:React.FormEvent) => {
+		event.preventDefault();
 		try {
 			const data = await request('/api/auth/login', methods.POST, {...form})
 			if(data)
@@ -39,24 +40,22 @@ export const AuthPage = function (){
 		console.log("not functional");
 	}
 
+
 	return(
-	<div className="row">
-		<div className="title">
-			<h1>Sing In Form</h1>
-		</div>
-		<div className="container-auth">
-			<div className="left-auth"></div>
-			<div className="right-auth">
-				<div className={`formBox-auth`}>
-					<p>Name</p>
-					<input placeholder="Login" id="name" type="text" name="name" value={form.name} onChange={changeHandler} required/>
-					<p>Password</p>
-					<input placeholder="•••••••" id="password" type="password" name="password" value={form.password} onChange={changeHandler} required/>
-					<input type="submit" onClick={loginHandler} disabled={loading} value="Sign In"/>
-					<p onClick={newpass} style={{marginTop:"5px"}} className="liteButton">забыли пароль?</p>
-				</div>
+	<div className="container-auth">
+		<h1>Login</h1>
+		<form onSubmit={loginHandler}>
+			<div className="input-data txt_f">
+				<input required type="text" name="name" value={form.name} onChange={changeHandler}/>
+				<label>Name</label>
 			</div>
-		</div>
+			<div className="input-data txt_f">
+				<input required type="password" name="password" value={form.password} onChange={changeHandler}/>
+				<label>Password</label>
+			</div>
+			<div className='pass'>Forgot Password?</div>
+			<input type="submit" value="Login"/>
+		</form>
 	</div>
 	)
 }

@@ -2,6 +2,7 @@ from turtle import title
 from auth_service.models import InterfaceColor, User
 from auth_service.schemas.base import FunctionRespons, TypeRespons
 from auth_service.schemas.colors import ColorForm
+from auth_service.schemas.user import TypeTheme
 
 async def add_color(data:ColorForm, id_user:int)->FunctionRespons:
 	user = await User.objects.get_or_none(id=id_user)
@@ -26,7 +27,7 @@ async def delete_color(id_color:int, id_user:int)->FunctionRespons:
 		return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
 	color = await InterfaceColor.objects.get_or_none(id=id_color)
 	if not color:
-		return FunctionRespons(status = TypeRespons.ERROR, detail="color not found")
+		return FunctionRespons(status = TypeRespons.NOT_FOUND, detail="color not found")
 	if color.user != user:
 		return FunctionRespons(status=TypeRespons.ERROR, detail="the color belongs to another user.")
 	if user.color == color.id:
@@ -35,16 +36,20 @@ async def delete_color(id_color:int, id_user:int)->FunctionRespons:
 	await color.delete()
 	return FunctionRespons(status=TypeRespons.OK)
 
-async def set_color(id_color:int, id_user:int)->FunctionRespons:
+async def set_color(type:TypeTheme, id_color:int, id_user:int)->FunctionRespons:
 	user = await User.objects.get_or_none(id=id_user)
 	if not user:
 		return FunctionRespons(status = TypeRespons.ERROR, detail="user not found")
 	color = await InterfaceColor.objects.get_or_none(id=id_color)
 	if not color:
-		return FunctionRespons(status = TypeRespons.ERROR, detail="color not found")
+		return FunctionRespons(status = TypeRespons.NOT_FOUND, detail="color not found")
 	if color.user != user:
 		return FunctionRespons(status=TypeRespons.ERROR, detail="the color belongs to another user.")
-	user.color = color.id
-	await user.update(_columns=["color"])
+	if type == TypeTheme.LIGHT:
+		user.color = color.id
+		await user.update(_columns=["color"])
+	elif type == TypeTheme.NIGHT:
+		user.nightColor = color.id
+		await user.update(_columns=["nightColor"])
 	return FunctionRespons(status=TypeRespons.OK)
 	
