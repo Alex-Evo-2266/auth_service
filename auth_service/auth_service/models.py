@@ -21,8 +21,8 @@ class User(ormar.Model):
     profile_image: int = ormar.Integer(nullable=False)
     color: int = ormar.Integer(default=-1)
     nightColor: int = ormar.Integer(default=-1)
-    autoColorSwitching: bool = ormar.Boolean(default=True)
-    autoBackgroundSwitching: bool = ormar.Boolean(default=False)
+    specialColor: int = ormar.Integer(default=-1)
+    specialTopic: bool = ormar.Boolean(default=False)
 
     def __str__(self):
         return self.UserName

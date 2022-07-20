@@ -20,7 +20,7 @@ export const RootComponents:React.FC = () =>{
 
 	useEffect(()=>{
 		updateBackground(dataConfig.backgrounds)
-		setTheme({colors: dataConfig.colors, night_colors:dataConfig.night_colors})
+		setTheme({colors: dataConfig.colors, night_colors:dataConfig.night_colors, special_colors:dataConfig.special_colors})
 	},[dataConfig])
 
 	return(

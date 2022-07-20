@@ -51,5 +51,8 @@ async def set_color(type:TypeTheme, id_color:int, id_user:int)->FunctionRespons:
 	elif type == TypeTheme.NIGHT:
 		user.nightColor = color.id
 		await user.update(_columns=["nightColor"])
+	elif type == TypeTheme.SPECIAL:
+		user.specialColor = color.id
+		await user.update(_columns=["specialColor"])
 	return FunctionRespons(status=TypeRespons.OK)
 	

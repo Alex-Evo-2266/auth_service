@@ -3,7 +3,7 @@ from auth_service.depends.auth import token_dep
 from auth_service.logic.colors import set_color
 from auth_service.logic.image import set_profile_image
 from auth_service.logic.user import addUser, deleteUser, editUser, getUser, getUsers
-from auth_service.logic.user_config import get_user_config
+from auth_service.logic.user_config import get_user_config, set_config
 from auth_service.schemas.base import TokenData, TypeRespons
 from auth_service.schemas.user import TypeTheme, UserEditSchema, UserForm, UserSchema
 
@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from typing import Optional, List
 
-from auth_service.schemas.user_config import UserConfig
+from auth_service.schemas.user_config import UserConfig, UserConfigPatch
 
 router = APIRouter(
     prefix="/api/users",
@@ -102,6 +102,13 @@ async def setprofileimage(imageId: int, auth_data: TokenData = Depends(token_dep
     res = await set_profile_image(auth_data.user_id, imageId)
     if res.status == TypeRespons.NOT_FOUND:
         return JSONResponse(status_code=404, content={"message": res.detail})
+    if res.status == TypeRespons.OK:
+        return "ok"
+    return JSONResponse(status_code=400, content={"message": res.detail})
+
+@router.patch("/config")
+async def setconfig(data: UserConfigPatch, auth_data: TokenData = Depends(token_dep)):
+    res = await set_config(data, auth_data.user_id)
     if res.status == TypeRespons.OK:
         return "ok"
     return JSONResponse(status_code=400, content={"message": res.detail})

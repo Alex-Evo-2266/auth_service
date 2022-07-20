@@ -1,8 +1,10 @@
 import { BackgroundTypes, IBackground, Time } from "../interfaces/ImageInterfaces"
 import { useCallback } from "react"
 import { colors, IColors, night_colors } from "../interfaces/colorInterfaces";
+import { useTypeSelector } from "./useTypeSelector";
 
 export const useColor = ()=>{
+	const dataConfig = useTypeSelector(state => state.userConfig)
 
 	function LightenDarkenColor(col:string, amt:number) {
 		var usePound = false;
@@ -77,8 +79,15 @@ export const useColor = ()=>{
 		return Time.DAY
 	},[])
 	
-	const setTheme = (data:{colors:IColors, night_colors:IColors}|null)=>{
-		if (getTime() === Time.NIGHT || getTime() === Time.EVENING)
+	const setTheme = (data:{colors:IColors, night_colors:IColors, special_colors:IColors}|null)=>{
+		if (dataConfig.special_topic)
+		{
+			if (!data)
+				setColors(night_colors)
+			else
+				setColors(data.special_colors)
+		}
+		else if (getTime() === Time.NIGHT || getTime() === Time.EVENING)
 		{
 			if (!data)
 				setColors(night_colors)

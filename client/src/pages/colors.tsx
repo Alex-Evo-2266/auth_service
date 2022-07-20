@@ -69,7 +69,7 @@ export const ColorsPage:React.FC = ()=>{
 		if (color.title === "")
 			return alert.show(AlertType.ERROR, "title empty", "")
 		await request("/api/color/create", methods.POST, color, {Authorization: `Bearer ${dataAuth.token}`})
-		setTheme({colors: dataConfig.colors, night_colors:dataConfig.night_colors})
+		setTheme({colors: dataConfig.colors, night_colors:dataConfig.night_colors, special_colors:dataConfig.special_colors})
 		setTimeout(()=>{
 			getColors()
 		},500)
@@ -84,6 +84,10 @@ export const ColorsPage:React.FC = ()=>{
 			{
 				title: "set night theme",
 				data: "NIGHT"
+			},
+			{
+				title: "set special theme",
+				data: "SPECIAL"
 			},
 			{
 				title: "delete",

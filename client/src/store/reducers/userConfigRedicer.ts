@@ -10,6 +10,8 @@ export interface IUserConfigState{
 	backgrounds: IBackground[]
 	colors: IColors
 	night_colors: IColors
+	special_colors: IColors
+	special_topic: boolean
 }
 
 interface IAction {
@@ -20,7 +22,9 @@ interface IAction {
 const initialSate:IUserConfigState = {
 	backgrounds: [],
 	colors: colors,
-	night_colors: night_colors
+	night_colors: night_colors,
+	special_colors: night_colors,
+	special_topic: false
 }
 
 export const userConfigReducer = (state:IUserConfigState = initialSate, action:IAction):IUserConfigState => {
