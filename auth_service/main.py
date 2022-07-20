@@ -10,6 +10,7 @@ from auth_service.api.colors import router as router_color
 from auth_service.api.user import router as router_user
 from auth_service.api.background import router as router_background
 from auth_service.settings import MEDIA_ROOT, MEDIA_URL, DEBUG, ORIGINS
+from auth_service.admin_create import initAdmin
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ async def startup() -> None:
     if not database_.is_connected:
         await database_.connect()
     logger.info("starting")
+    await initAdmin()
 
 @app.on_event("shutdown")
 async def shutdown() -> None:
