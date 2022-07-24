@@ -40,7 +40,7 @@ export const DetailImage:React.FC<DetailImageProps> = (props)=>{
 	const setBackground = ()=>{
 		const items = [
 			{
-				title: "base",
+				title: "special",
 				data: BackgroundTypes.BASE
 			},
 			{

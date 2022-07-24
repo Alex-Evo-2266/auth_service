@@ -21,7 +21,7 @@ export const SettingsPage:React.FC = ()=>{
 	const dataAuth = useTypeSelector(state=>state.auth)
 
 	useEffect(()=>{
-		dispatch({type: MenuTypesActions.MENU_SET_NAME, payload:{title:"Colors"}})
+		dispatch({type: MenuTypesActions.MENU_SET_NAME, payload:{title:"Settings"}})
 	},[])
 
 	const click = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -57,6 +57,21 @@ export const SettingsPage:React.FC = ()=>{
 						<input type="checkbox" className="switch" name="special_topic" onChange={click} checked={dataConfig.special_topic}/>
 					</div>
 				</div>
+			</div>
+			<div className="separation"></div>
+			<div className="backgrounds settings_block">
+			{
+				dataConfig.backgrounds.map((item, index)=>{
+					return(
+						<div key={index} className="background-item">
+							<div className="background-item-img">
+								<img src={item.url} alt={item.type.toString()}/>
+							</div>
+							<div className="background-item-title">{item.type.toString()}</div>
+						</div>
+					)
+				})
+			}
 			</div>
 			<div className="separation"></div>
 			<button className="btn" onClick={save}>save</button>
