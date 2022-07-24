@@ -1,0 +1,62 @@
+version: "3.3"
+
+services:
+  sh_db:
+    image: mariadb
+     # image: 459below/mariadb-armv7:latest
+    restart: always
+    ports:
+      - 3307:3306
+    volumes:
+      - bd_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - client_voluem:/client/build
+  auth_service:
+    restart: always
+    build:
+      context: ./auth_service
+      dockerfile: Dockerfile
+    command: bash -c "alembic upgrade head &&
+              uvicorn main:app --reload --port=8000 --host='0.0.0.0'"
+    environment:
+      AUTH_SERVICE_BD_HOST: ${SMARTHOME_BD_HOST}
+      AUTH_SERVICE_BD_PORT: ${SMARTHOME_BD_PORT}
+      AUTH_SERVICE_BD_NAME: ${MYSQL_DATABASE}
+      AUTH_SERVICE_BD_USER: ${MYSQL_USER}
+      AUTH_SERVICE_BD_PASSWORD: ${MYSQL_PASSWORD}
+    expose:
+      - 8000
+    volumes:
+      - media_voluem:/home/auth_service/web/media
+    depends_on:
+      - sh_db
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - auth_service
+      - client
+    volumes:
+      - media_voluem:/home/auth_service/web/media
+      - client_voluem:/client/build
+volumes:
+  bd_data:
+  media_voluem:
+  client_voluem:

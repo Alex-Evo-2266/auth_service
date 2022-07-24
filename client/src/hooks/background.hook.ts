@@ -33,15 +33,21 @@ export const useBackgraund = ()=>{
 
 	const convertTimetoBackgroundTypes = useCallback((time:Time):BackgroundTypes=>BackgroundTypes[time],[])
 
-	const getBackground = useCallback((backgraunds:IBackground[])=>{
-		const time = getTime()
-		const image = filterBackgrounds(backgraunds, convertTimetoBackgroundTypes(time))
-
+	const getBackground = useCallback((backgraunds:IBackground[], special:boolean)=>{
+		let image:IBackground | null
+		if (special)
+		{
+			image = filterBackgrounds(backgraunds, BackgroundTypes.BASE)
+		}
+		else{
+			const time = getTime()
+			image = filterBackgrounds(backgraunds, convertTimetoBackgroundTypes(time))
+		}
 		return image ?? defaultBackground
 	},[getTime, filterBackgrounds, convertTimetoBackgroundTypes])
 
-	const updateBackground = useCallback((backgraunds:IBackground[])=>{
-		const image = getBackground(backgraunds)
+	const updateBackground = useCallback((backgraunds:IBackground[], special: boolean = false)=>{
+		const image = getBackground(backgraunds, special)
 		document.body.style.background = `url(${image.url})`
 		document.body.style.backgroundSize = `cover`
 		document.body.style.backgroundAttachment = `fixed`

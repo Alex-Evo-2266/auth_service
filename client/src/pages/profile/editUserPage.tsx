@@ -5,11 +5,13 @@ import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { IAuthState } from "../../interfaces/authInterfaces";
 import { IOutUser, IUser } from "../../interfaces/profile";
+import { useNavigate } from "react-router-dom";
 import { AlertType, AlertTypeAction } from "../../store/reducers/alertReducer";
 
 export const ProfileEditPage:React.FC = () =>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const alert = useAlert()
+	let navigate = useNavigate();
 	const { request, error, clearError, loading } = useHttp()
 	const [user, setUser] = useState<IUser>({
 		id: null,
@@ -56,6 +58,7 @@ export const ProfileEditPage:React.FC = () =>{
 			email: user.email
 		}
 		await request("/api/users", methods.PUT, data, {Authorization: `Bearer ${dataAuth.token}`})
+		navigate("/profile", { replace: true });
 	}
 
 	if (loading)

@@ -43,7 +43,7 @@ export const Menu:React.FC = () =>{
 				<li>
 					<NavLink to="/colors">
 						<span className="icon"><i className="fas fa-palette"></i></span>
-						<span className="title">galery</span>
+						<span className="title">colors</span>
 					</NavLink>
 				</li>
 				<li>
