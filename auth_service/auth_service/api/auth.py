@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 
 from auth_service.logic.auth import refresh_token as rtoken, login as Authorization
-from auth_service.schemas.auth import Login, ResponseLogin, Token, TypeResponse, TypeGrant
+from auth_service.schemas.auth import Login, ResponseLogin, Token, TypeResponse, TypeGrant, AuthResponse
 
 
 router = APIRouter(
@@ -33,6 +33,6 @@ async def ref(refresh_toket: Optional[str] = Cookie(None)):
         return response
     return JSONResponse(status_code=403, content={"message": res.detail})
 
-@router.get("/authorize")
+@router.get("/authorize", response_model=AuthResponse)
 async def authorize(response_type:TypeResponse, client_id:str, redirect_uri:str, scope:str, state:str):
-    return {"response_type":response_type, "client_id":client_id, "redirect_uri":redirect_uri, "scope":scope, "state":state}
+    return AuthResponse(code="test_code", state=state)

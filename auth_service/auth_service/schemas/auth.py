@@ -7,6 +7,10 @@ class TypeGrant(str, Enum):
 class TypeResponse(str, Enum):
     CODE = "code"
 
+class AuthResponse(BaseModel):
+    code: str
+    state: str
+
 class Login(BaseModel):
     name: str
     password: str

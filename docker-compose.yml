@@ -35,6 +35,8 @@ services:
       AUTH_SERVICE_BD_PASSWORD: ${MYSQL_PASSWORD}
     expose:
       - 8000
+    ports:
+      - 5000:8000
     volumes:
       - media_voluem:/home/auth_service/web/media
     depends_on:

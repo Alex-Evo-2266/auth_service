@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import { AuthPage } from "./pages/authPage"
+import { AuthtorizePage } from "./pages/authtorization"
 import { ColorsPage } from "./pages/colors"
 import { GalleryPage } from "./pages/gallery/gallery"
 import { ProfileEditPage } from "./pages/profile/editUserPage"
@@ -30,6 +31,7 @@ export const useRoutes = (isAuthenticated:boolean)=>{
            <Route path="/*" element={<Navigate replace to="/" />} />
           </>
         }
+        <Route path="authorize" element={<AuthtorizePage/>}/>
       </Routes>
 	)
 }
