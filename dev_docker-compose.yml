@@ -22,24 +22,26 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./client/src:/client/src
+      - ./client:/client/build
   auth_service:
     restart: always
     build:
       context: ./auth_service
       dockerfile: dev_Dockerfile
     command: bash -c "alembic upgrade head &&
-              uvicorn main:app --reload --port=5000 --host='0.0.0.0'"
+              uvicorn main:app --reload --port=8000 --host='0.0.0.0'"
     environment:
       AUTH_SERVICE_BD_HOST: ${SMARTHOME_BD_HOST}
       AUTH_SERVICE_BD_PORT: ${SMARTHOME_BD_PORT}
       AUTH_SERVICE_BD_NAME: ${MYSQL_DATABASE}
       AUTH_SERVICE_BD_USER: ${MYSQL_USER}
       AUTH_SERVICE_BD_PASSWORD: ${MYSQL_PASSWORD}
+    expose:
+      - 8000
     ports:
-      - 5000:5000
+      - 5050:8000
     volumes:
-      - media_voluem:/home/smart_home/web/media
+      - media_voluem:/home/auth_service/web/media
     depends_on:
       - sh_db
   phpmyadmin:
@@ -49,6 +51,16 @@ services:
       - 8080:80
     environment:
       - PMA_ARBITRARY=1
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile_dev
+    ports:
+      - 5000:80
+    depends_on:
+      - auth_service
+    volumes:
+      - media_voluem:/home/auth_service/web/media
 volumes:
   bd_data:
   media_voluem:
