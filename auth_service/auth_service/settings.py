@@ -30,6 +30,7 @@ STYLES_DIR = os.path.join(BASE_DIR, "files","styles")
 
 TIME_UPPDATA = 6
 LENGTHPASS = 10
+LENGTHPASSAPP = 10
 
 MEDIA_URL = '/media/'
 IMAGE_URL = os.path.join(MEDIA_URL, 'image')

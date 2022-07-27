@@ -96,7 +96,6 @@ export const AuthtorizePage = function (){
 				<input required type="password" name="password" value={form.password} onChange={changeHandler}/>
 				<label>Password</label>
 			</div>
-			<div className='pass' onClick={newpass}>Forgot Password?</div>
 			<input type="submit" value="Login"/>
 		</form>
 	</div>

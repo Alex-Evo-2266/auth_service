@@ -26,3 +26,10 @@ class Tokens(BaseModel):
 
 class Token(BaseModel):
     token: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    expires_in: int
+    token_type: str
+    refresh_token: str
+    scope: str

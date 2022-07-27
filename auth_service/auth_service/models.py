@@ -40,6 +40,7 @@ class Client(ormar.Model):
     default_scopes: str = ormar.Text()
     redirect_uris: str = ormar.Text()
     default_redirect_uri: str = ormar.Text()
+    client_secret: str = ormar.String(max_length=100)
 
 
 class BearerToken(ormar.Model):
