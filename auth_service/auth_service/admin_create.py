@@ -15,9 +15,7 @@ async def initdir():
 async def initAdmin():
     await initdir()
     users = await User.objects.all()
-    print("afesdgrfh")
     if len(users) == 0:
-        print("afesdgrefh")
         await addAdmin()
 
 async def addAdmin():

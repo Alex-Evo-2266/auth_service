@@ -8,12 +8,14 @@ import { IAuthState } from "../../interfaces/authInterfaces";
 import { IUser } from "../../interfaces/profile";
 import { IService } from "../../interfaces/services";
 import { AlertType, AlertTypeAction } from "../../store/reducers/alertReducer";
+import { AddServicePage } from "./newServices";
 
 export const ServicesPage:React.FC = () =>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const { request, error, clearError, loading } = useHttp()
 	const alert = useAlert()
 	const [services, setServices] = useState<IService[]>([])
+	const [createServiceVisible, setCreateServiceVisible] = useState<boolean>(false)
 
 	useEffect(()=>{
 		if (error)
@@ -33,15 +35,26 @@ export const ServicesPage:React.FC = () =>{
 		getUser()
 	},[getUser])
 
+	const hide = ()=>{
+		setCreateServiceVisible(false)
+	}
+
+	const show = ()=>{
+		setCreateServiceVisible(true)
+	}
+
 	if (loading)
 		return <Loading/>
+
+	if (createServiceVisible)
+		return <AddServicePage hide={hide}/>
 	
 	return(
 		<>
 		<div className="services-list">
 
 		</div>
-		<div className="floating-btn">+</div>
+		<div onClick={show} className="floating-btn">+</div>
 		</>
 	)
 }

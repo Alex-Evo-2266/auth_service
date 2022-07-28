@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from auth_service.schemas.auth import TypeGrant, TypeResponse
 
 class CreateApps(BaseModel):
-    client_id: str
+    title: str
     default_redirect_uri: str
 
 class CreateAppsRespons(BaseModel):

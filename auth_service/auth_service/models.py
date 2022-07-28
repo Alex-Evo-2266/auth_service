@@ -32,6 +32,7 @@ class Client(ormar.Model):
         constraints = [ormar.UniqueColumns("client_id")]
 
     id: int = ormar.Integer(primary_key=True)
+	title: str = ormar.String(max_length=100)
     client_id: str = ormar.String(max_length=100)
     user: Optional[User] = ormar.ForeignKey(User, related_name="client")
     grant_type: TypeGrant = ormar.String(max_length=18)

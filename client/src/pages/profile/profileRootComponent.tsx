@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { MenuTypesActions } from "../../store/reducers/menuReducer";
-import { ServicesPage } from "./services"
+import { ServicesPage } from "../services/services"
 
 export const ProfileRootComponent:React.FC = () =>{
 	const dispatch = useDispatch()

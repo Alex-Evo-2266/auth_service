@@ -7,7 +7,13 @@ export enum ResponseType {
 	CODE = "code"
 }
 
+export interface ICreateService{
+	title: string,
+	default_redirect_uri: string
+}
+
 export interface IService{
+	title: string,
 	client_id: string,
     grant_type: GrantType,
     response_type: ResponseType,

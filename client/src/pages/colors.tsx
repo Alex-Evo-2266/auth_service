@@ -109,7 +109,7 @@ export const ColorsPage:React.FC = ()=>{
 
 
 	return(
-		<div className="colors">
+		<div className="colors-container">
 			<div className="theme_create">
 				<h2>create theme</h2>
 				<div className="input-container">
