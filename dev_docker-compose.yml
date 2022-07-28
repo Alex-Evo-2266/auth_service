@@ -22,7 +22,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./client:/client/build
+      - ./client/src:/client/src
   auth_service:
     restart: always
     build:

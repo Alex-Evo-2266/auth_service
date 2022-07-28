@@ -13,7 +13,40 @@
 		background: var(--color-normal);
 		color: var(--text-normal);
 		@media (max-width: 780px){
-			width: calc(100% - 40px)
+			width: calc(100% - 40px);
+			transition: 1s;
+			&.show{
+				left: 0;;
+				overflow: hidden;
+			}
+			&.hide{
+				left: -100%;;
+			}
+		}
+		.switch-profile-btn{
+			width: 120px;
+			height: 60px;
+			position: absolute;
+			top: 0;
+			right: -60px;
+			background: var(--color-normal);
+			color: var(--text-normal);
+			border-radius: 10px;
+			overflow: hidden;
+			i{
+				width: 60px;
+				height: 60px;
+				font-size: 24px;
+				text-align: center;
+				line-height: 60px;
+				&:first-child{
+					background: var(--color-base-v2);
+					color: var(--text-base-v2);
+				}
+			}
+			@media (min-width: 780px){
+				display: none;
+			}
 		}
 		.img-container{
 			padding: 20px;

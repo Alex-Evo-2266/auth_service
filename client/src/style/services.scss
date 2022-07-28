@@ -1,0 +1,26 @@
+.services{
+	position: relative;
+}
+
+.floating-btn{
+	background: var(--color-active);
+	color: var(--text-active);
+	border-radius: 50%;
+	position: absolute;
+	height: 56px;
+	width: 56px;
+	right: 10px;
+	bottom: 10px;
+	font-size: 40px;
+	text-align: center;
+	box-shadow: 0 0 10px #000;
+	transition: .3s;
+	line-height: 56px;
+	cursor: pointer;
+	&:hover{
+		box-shadow: none;
+	}
+	&:active{
+		box-shadow: inset 0 0 10px #000;
+	}
+}

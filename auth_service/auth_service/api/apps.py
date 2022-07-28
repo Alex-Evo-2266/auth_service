@@ -27,7 +27,7 @@ async def delete(client_id: str, auth_data: TokenData = Depends(token_dep)):
 		return data_app.data
 	return JSONResponse (status_code=400, content={"message": data_app.detail})
 
-@router.get("/", response_model=List[AppResponse])
+@router.get("", response_model=List[AppResponse])
 async def give(auth_data: TokenData = Depends(token_dep)):
 	ret = await give_apps(auth_data.user_id)
 	return ret.data
