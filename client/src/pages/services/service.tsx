@@ -102,7 +102,7 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 			</div>
 			<div className="btn_container">
 				<button onClick={save} className="btn">save</button>
-				<button onClick={del} style={{background: "red"}} className="btn">delete</button>
+				<button onClick={del} style={{background: "#cb2020"}} className="btn">delete</button>
 				<button onClick={hidef} className="btn">exit</button>
 			</div>
 		</div>
