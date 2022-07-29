@@ -3,10 +3,10 @@
 	margin: 0 auto;
 }
 .colors_div{
-	border: 2px solid var(--color-base);
+	border: 2px solid var(--color-normal);
 	margin: 10px;
 	border-radius: 4px;
-	background: var(--color-base-glass);
+	background: var(--color-normal-glass);
 	.colors{
 		display: flex;
 		.color_container{
@@ -15,7 +15,7 @@
 				line-height: 40px;
 				font-size: 20px;
 				text-align: center;
-				color: var(--text-base);
+				color: var(--text-normal);
 			}
 		}
 	}

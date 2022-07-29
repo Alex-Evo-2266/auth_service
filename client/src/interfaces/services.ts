@@ -15,6 +15,7 @@ export interface ICreateService{
 export interface IService{
 	title: string,
 	client_id: string,
+	client_secret?: string,
     grant_type: GrantType,
     response_type: ResponseType,
     scopes: string,

@@ -2,10 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
-import { ICreateService } from "../../interfaces/services";
+import { GrantType, ICreateService, IService, ResponseType } from "../../interfaces/services";
 import { AlertType } from "../../store/reducers/alertReducer";
+import { ServicePage } from "./service";
 
 interface IProp{
+	update?: ()=>void,
 	hide?: ()=>void,
 }
 
@@ -13,6 +15,19 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
 	const alert = useAlert()
 	const { request, error, clearError, loading } = useHttp()
 	const dataAuth = useTypeSelector(state=>state.auth)
+	const [newservice, setNewService] = useState<IService>(
+		{
+			title: "",
+			client_id: "",
+			grant_type: GrantType.AUTH_CODE,
+			response_type: ResponseType.CODE,
+			scopes: "",
+			default_scopes: "",
+			redirect_uris: "",
+			default_redirect_uri: ""
+		}
+	)
+	const [visible, setVisible] = useState<boolean>(false)
 	const [service, setService] = useState<ICreateService>(
 		{
 			title: "",
@@ -26,11 +41,13 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
 	const save = async()=>{
 		if (service.title == "" || service.default_redirect_uri == "")
 			return alert.show(AlertType.ERROR, "invalid data", "empty string")
-		const data = await request("/api/app/create", methods.POST, service, {Authorization: `Bearer ${dataAuth.token}`})
+		const data: IService = await request("/api/app/create", methods.POST, service, {Authorization: `Bearer ${dataAuth.token}`})
 		console.log(data)
 		if (data)
-			if (prop.hide)
-				prop.hide()
+		{
+			setNewService(data)
+			setVisible(true)
+		}
 	}
 
 	useEffect(()=>{
@@ -40,6 +57,18 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
      		clearError();
     	}
 	},[error, clearError])
+
+	const hide = ()=>{
+		if (prop.update)
+			prop.update()
+		if (prop.hide)
+			prop.hide()
+	}
+
+	if (visible)
+		return (
+			<ServicePage data={newservice} hide={hide} update={prop.update}/>
+		)
 
 	return(
 		<div className="add-service-containre">
@@ -59,7 +88,10 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
 					<label>redirect url</label>
 				</div>
 			</div>
-			<button onClick={save} className="btn">Save</button>
+			<div className="btn_container">
+				<button onClick={save} className="btn">Save</button>
+				<button onClick={hide} className="btn">exit</button>
+			</div>
 		</div>
 	)
 }

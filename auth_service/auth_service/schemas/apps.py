@@ -10,7 +10,7 @@ class CreateAppsRespons(BaseModel):
 	client_secret: str
 	client_id: str
 
-class AppResponse(BaseModel):
+class AppData(BaseModel):
     title: str
     client_id: str
     grant_type: TypeGrant
@@ -19,3 +19,6 @@ class AppResponse(BaseModel):
     default_scopes: str
     redirect_uris: str
     default_redirect_uri: str
+
+class AppFullData(AppData):
+	client_secret: str

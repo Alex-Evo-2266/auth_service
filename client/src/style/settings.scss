@@ -80,15 +80,15 @@ input[type="checkbox"].switch{
 
 .theme_create{
 	width: calc(100% - 40);
-	background: var(--color-base);
-	color: var(--text-base);
+	background: var(--color-normal);
+	color: var(--text-normal);
 	border-radius: 4px;
 	padding: 10px;
 	margin: 10px;
 	position: relative;
 	input{
-		background: var(--color-base);
-		color: var(--text-base);
+		background: var(--color-normal);
+		color: var(--text-normal);
 	}
 }
 

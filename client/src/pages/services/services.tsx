@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loading } from "../../components/loading";
+import { ServiceItem } from "../../components/serviceItem";
 import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
@@ -9,6 +10,7 @@ import { IUser } from "../../interfaces/profile";
 import { IService } from "../../interfaces/services";
 import { AlertType, AlertTypeAction } from "../../store/reducers/alertReducer";
 import { AddServicePage } from "./newServices";
+import { ServicePage } from "./service";
 
 export const ServicesPage:React.FC = () =>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
@@ -16,6 +18,7 @@ export const ServicesPage:React.FC = () =>{
 	const alert = useAlert()
 	const [services, setServices] = useState<IService[]>([])
 	const [createServiceVisible, setCreateServiceVisible] = useState<boolean>(false)
+	const [service, setService] = useState<IService | null>(null)
 
 	useEffect(()=>{
 		if (error)
@@ -25,15 +28,27 @@ export const ServicesPage:React.FC = () =>{
     	}
 	},[error, clearError])
 
-	const getUser = useCallback(async () => {
+	const getApps = useCallback(async () => {
 		const data = await request("/api/app", methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
 		if (data)
+		{
 			setServices(data)
+			console.log(service, data)
+			if (service)
+			{
+				let serviceItem = data.filter((item:IService)=>item.client_id == service.client_id)
+				console.log(serviceItem)
+				if (serviceItem.length)
+					setService(null)
+					setService(serviceItem[0])
+			}
+		}
+
 	},[request, dataAuth.token])
 
 	useEffect(()=>{
-		getUser()
-	},[getUser])
+		getApps()
+	},[getApps])
 
 	const hide = ()=>{
 		setCreateServiceVisible(false)
@@ -47,13 +62,22 @@ export const ServicesPage:React.FC = () =>{
 		return <Loading/>
 
 	if (createServiceVisible)
-		return <AddServicePage hide={hide}/>
+		return <AddServicePage hide={hide} update={getApps}/>
+	
+	if (service)
+		return <ServicePage data={service} hide={()=>setService(null)} update={getApps}/>
 	
 	return(
 		<>
-		<div className="services-list">
-
-		</div>
+		<ul className="services-list">
+			{
+				services.map((item, index)=>(
+					<li className="service-item-container" key={index} onClick={()=>setService(item)}>
+						<ServiceItem data={item}/>
+					</li>
+					))
+			}
+		</ul>
 		<div onClick={show} className="floating-btn">+</div>
 		</>
 	)
