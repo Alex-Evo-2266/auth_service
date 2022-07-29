@@ -36,7 +36,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://nginx:80",
+  "proxy": "http://localhost:5000",
   "browserslist": {
     "production": [
       ">0.2%",

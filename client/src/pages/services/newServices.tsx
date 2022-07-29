@@ -27,6 +27,7 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
 		if (service.title == "" || service.default_redirect_uri == "")
 			return alert.show(AlertType.ERROR, "invalid data", "empty string")
 		const data = await request("/api/app/create", methods.POST, service, {Authorization: `Bearer ${dataAuth.token}`})
+		console.log(data)
 		if (data)
 			if (prop.hide)
 				prop.hide()

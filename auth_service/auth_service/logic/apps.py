@@ -1,5 +1,5 @@
 import logging
-from random import random
+import random
 from typing import List
 
 import bcrypt
@@ -23,7 +23,7 @@ def newGenPass()->FunctionRespons:
 def Genid()->FunctionRespons:
     chars = 'abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
     password =''
-    for i in range(LENGTHPASSAPP):
+    for i in range(32):
         password += random.choice(chars)
     hashedPass = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
     logger.debug(f'gen new password.')
@@ -46,6 +46,7 @@ async def give_apps(user_id: int)->FunctionRespons:
 	arr:List[AppResponse] = []
 	for item in clients:
 		arr.append(AppResponse(
+			title=item.title,
 			client_id=item.client_id,
 			grant_type=item.grant_type,
 			response_type=item.response_type,

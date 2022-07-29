@@ -11,6 +11,7 @@ class CreateAppsRespons(BaseModel):
 	client_id: str
 
 class AppResponse(BaseModel):
+    title: str
     client_id: str
     grant_type: TypeGrant
     response_type: TypeResponse

@@ -7,12 +7,14 @@
 	}
 	.profile{
 		padding: 20px;
+		z-index: 6;
 		position: relative;
 		flex-basis:33.33%;
 		height: calc(100vh - 100px);
 		background: var(--color-normal);
 		color: var(--text-normal);
 		@media (max-width: 780px){
+			position: absolute;
 			width: calc(100% - 40px);
 			transition: 1s;
 			&.show{
@@ -25,6 +27,7 @@
 		}
 		.switch-profile-btn{
 			width: 120px;
+			z-index: 5;
 			height: 60px;
 			position: absolute;
 			top: 0;
@@ -86,8 +89,6 @@
 	.services{
 		flex-basis:66.66%;
 		height: calc(100vh - 60px);
-		@media (max-width: 780px){
-			display: none;
-		}
+		width: 100%;
 	}
 }
