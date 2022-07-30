@@ -8,7 +8,7 @@ class TypeGrant(str, Enum):
 class TypeResponse(str, Enum):
     CODE = "code"
 
-class TypeResponse(str, Enum):
+class TokenType(str, Enum):
     BEARER_TOKEN = "bearertoken"
 
 class AuthResponse(BaseModel):
@@ -41,6 +41,6 @@ class ResponseCode(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     expires_in: int
-    token_type: TypeResponse = TypeResponse.BEARER_TOKEN
+    token_type: TokenType = TokenType.BEARER_TOKEN
     refresh_token: str
     scope: str

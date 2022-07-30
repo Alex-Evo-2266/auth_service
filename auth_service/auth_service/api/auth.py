@@ -6,7 +6,7 @@ from auth_service.logic.apps import auth_code
 from auth_service.schemas.base import TokenData, TypeRespons
 
 from auth_service.logic.auth import refresh_token as rtoken, login as Authorization
-from auth_service.schemas.auth import Login, ResponseLogin, Token, TypeResponse, TypeGrant, AuthResponse, TokenResponse
+from auth_service.schemas.auth import Login, ResponseLogin, Token, TokenType, TypeResponse, TypeGrant, AuthResponse, TokenResponse
 
 
 router = APIRouter(
@@ -45,4 +45,4 @@ async def authorize(response_type:TypeResponse, client_id:str, redirect_uri:str,
 
 @router.get("/token", response_model=TokenResponse)
 async def give_token(grant_type:TypeGrant, code:str, redirect_uri:str, client_id:str, client_secret:str):
-    return TokenResponse(access_token="test_code", expires_in=7000, token_type="")
+    return TokenResponse(access_token="test_code", expires_in=7000, token_type=TokenType.BEARER_TOKEN)
