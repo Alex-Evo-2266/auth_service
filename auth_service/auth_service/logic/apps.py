@@ -1,17 +1,26 @@
 import logging
 import random
+from datetime import datetime, timedelta
 from typing import List
 
 import bcrypt
-from auth_service.models import Client, User
+import jwt
+from auth_service.models import AuthCode, Client, User
 from auth_service.schemas.apps import AppData, CreateApps, AppFullData
-from auth_service.schemas.auth import TypeGrant, TypeResponse
+from auth_service.schemas.auth import ResponseCode, TypeGrant, TypeResponse
 from auth_service.schemas.base import FunctionRespons, TypeRespons
+from auth_service import settings
 from auth_service.settings import LENGTHPASSAPP
 
 from auth_service.utils.without_keys import without_keys
 
 logger = logging.getLogger(__name__)
+
+async def create_token(data: dict, expires_at: datetime = datetime.now() + timedelta(minutes=15), type: str = "code", secret: str = settings.SECRET_AUTH_CODE_KEY):
+    to_encode = data.copy()
+    to_encode.update({'exp': expires_at, 'sub': type})
+    encoded_jwt = jwt.encode(to_encode, secret, algorithm = settings.ALGORITHM)
+    return encoded_jwt
 
 def newGenPass()->FunctionRespons:
     chars = '+-/*!&$#?=@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
@@ -71,9 +80,10 @@ async def give_apps(user_id: int)->FunctionRespons:
 	clients = await Client.objects.all(user=user)
 	arr:List[AppData] = []
 	for item in clients:
-		arr.append(AppData(
+		arr.append(AppFullData(
 			title=item.title,
 			client_id=item.client_id,
+			client_secret=item.client_secret,
 			grant_type=item.grant_type,
 			response_type=item.response_type,
 			scopes=item.scopes,
@@ -93,3 +103,19 @@ async def del_apps(client_id:str, user_id: int)->FunctionRespons:
 	print("f")
 	await client.delete()
 	return FunctionRespons(status=TypeRespons.OK, data="ok")
+
+async def auth_code(client_id:str, redirect_uri:str, scope:str, user_id:int)->FunctionRespons:
+	user: User = await User.objects.get_or_none(id=user_id)
+	if not user:
+		return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
+	client = await Client.objects.get_or_none(client_id=client_id)
+	if not client:
+		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
+	now = datetime.now()
+	print(now)
+	print(now + timedelta(minutes=15))
+	expires_at = datetime.now() + timedelta(minutes=15)
+	code = Genid().data
+	print(code)
+	await AuthCode.objects.create(client=client, user=user, scopes=scope, redirect_uri=redirect_uri, expires_at=expires_at, code=code, challenge_method="", challenge="")
+	return FunctionRespons(status=TypeRespons.OK, data=code)

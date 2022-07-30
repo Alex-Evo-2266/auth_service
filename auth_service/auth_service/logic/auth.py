@@ -48,7 +48,6 @@ async def create_tokens(user_id:int)->Tokens:
         ),
     )
 
-
 async def create_token(data: dict, expires_delta: timedelta = timedelta(minutes=15), type: str = "access", secret: str = settings.SECRET_JWT_KEY):
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta

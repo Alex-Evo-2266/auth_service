@@ -27,8 +27,8 @@ export const AuthtorizePage = function (){
     	}
 	},[error, clearError])
 
-	const	oauth = useCallback(async(response_type:string, client_id:string, redirect_uri:string, scope:string, state:string)=>{
-		const data = await request(`/api/auth/authorize?response_type=${response_type}&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${state}`, methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
+	const	oauth = useCallback(async(response_type:string, client_id:string, redirect_uri:string, scope:string, state:string, token:string)=>{
+		const data = await request(`/api/auth/authorize?response_type=${response_type}&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${state}`, methods.GET, null, {Authorization: `Bearer ${token}`})
 		console.log(data)
 		window.location.replace(`${redirect_uri}?code=${data.code}&state=${state}`)
 	},[request])
@@ -43,7 +43,7 @@ export const AuthtorizePage = function (){
 		if (response_type && client_id && redirect_uri && scope && state)
 		{
 			if(dataAuth.isAuthenticated)
-				oauth(response_type, client_id, redirect_uri, scope, state)
+				oauth(response_type, client_id, redirect_uri, scope, state, dataAuth.token)
 		}
 		else
 			alert.show(AlertType.ERROR, "error", "query error")
@@ -69,7 +69,7 @@ export const AuthtorizePage = function (){
 				if (response_type && client_id && redirect_uri && scope && state)
 				{
 					if(dataAuth.isAuthenticated)
-						oauth(response_type, client_id, redirect_uri, scope, state)
+						oauth(response_type, client_id, redirect_uri, scope, state, data.token)
 				}
 				else
 					alert.show(AlertType.ERROR, "error", "query error")

@@ -1,3 +1,4 @@
+import datetime
 from pydantic import BaseModel
 from enum import Enum
 
@@ -6,6 +7,9 @@ class TypeGrant(str, Enum):
 
 class TypeResponse(str, Enum):
     CODE = "code"
+
+class TypeResponse(str, Enum):
+    BEARER_TOKEN = "bearertoken"
 
 class AuthResponse(BaseModel):
     code: str
@@ -27,9 +31,16 @@ class Tokens(BaseModel):
 class Token(BaseModel):
     token: str
 
+class ResponseCode(BaseModel):
+    client_id: str
+    scopes: str
+    redirect_uri: str
+    code: str
+    expires_at: datetime.datetime
+
 class TokenResponse(BaseModel):
     access_token: str
     expires_in: int
-    token_type: str
+    token_type: TypeResponse = TypeResponse.BEARER_TOKEN
     refresh_token: str
     scope: str
