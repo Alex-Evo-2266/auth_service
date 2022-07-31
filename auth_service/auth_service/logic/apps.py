@@ -16,35 +16,28 @@ from auth_service.utils.without_keys import without_keys
 
 logger = logging.getLogger(__name__)
 
-async def create_token(data: dict, expires_at: datetime = datetime.now() + timedelta(minutes=15), type: str = "code", secret: str = settings.SECRET_AUTH_CODE_KEY):
-    to_encode = data.copy()
-    to_encode.update({'exp': expires_at, 'sub': type})
-    encoded_jwt = jwt.encode(to_encode, secret, algorithm = settings.ALGORITHM)
-    return encoded_jwt
-
-def newGenPass()->FunctionRespons:
-    chars = '+-/*!&$#?=@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+def strGenerator(chars:str, count:int)->FunctionRespons:
     password =''
-    for i in range(LENGTHPASSAPP):
+    for i in range(count):
         password += random.choice(chars)
     hashedPass = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
-    logger.debug(f'gen new password.')
     return FunctionRespons(status=TypeRespons.OK, data=password)
+
+def GenPass()->FunctionRespons:
+    chars = '+-/*!&$#?=@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+    logger.debug(f'gen password.')
+    return strGenerator(chars, LENGTHPASSAPP)
 
 def Genid()->FunctionRespons:
     chars = 'abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-    password =''
-    for i in range(32):
-        password += random.choice(chars)
-    hashedPass = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
-    logger.debug(f'gen new password.')
-    return FunctionRespons(status=TypeRespons.OK, data=password)
+    logger.debug(f'gen id.')
+    return strGenerator(chars, 32)
 
 async def add_apps(data:CreateApps, user_id: int)->FunctionRespons:
 	user: User = await User.objects.get_or_none(id=user_id)
 	if not user:
 		return FunctionRespons(status=TypeRespons.ERROR, detail="error")
-	datapass = newGenPass().data
+	datapass = GenPass().data
 	dataid = ""
 	while (True):
 		dataid = Genid().data
@@ -100,7 +93,6 @@ async def del_apps(client_id:str, user_id: int)->FunctionRespons:
 	client = await Client.objects.get_or_none(user=user, client_id=client_id)
 	if not client:
 		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
-	print("f")
 	await client.delete()
 	return FunctionRespons(status=TypeRespons.OK, data="ok")
 
@@ -115,7 +107,11 @@ async def auth_code(client_id:str, redirect_uri:str, scope:str, user_id:int)->Fu
 	print(now)
 	print(now + timedelta(minutes=15))
 	expires_at = datetime.now() + timedelta(minutes=15)
-	code = Genid().data
+	codes = None
+	code = ""
+	while (not codes):
+		code = strGenerator('abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 100).data
+		codes = await AuthCode.objects.get_or_none(code=code)
 	print(code)
 	await AuthCode.objects.create(client=client, user=user, scopes=scope, redirect_uri=redirect_uri, expires_at=expires_at, code=code, challenge_method="", challenge="")
 	return FunctionRespons(status=TypeRespons.OK, data=code)

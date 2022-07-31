@@ -8,6 +8,7 @@ import { ProfilePage } from "./pages/profile/profilePage"
 import { ProfileRootComponent } from "./pages/profile/profileRootComponent"
 import { RootComponents } from "./pages/rootComponents"
 import { SettingsPage } from "./pages/settings"
+import { UsersPage } from "./pages/usersPage"
 
 
 export const useRoutes = (isAuthenticated:boolean)=>{
@@ -24,6 +25,7 @@ export const useRoutes = (isAuthenticated:boolean)=>{
             <Route path="gallery" element={<GalleryPage/>}/>
             <Route path="settings" element={<SettingsPage/>}/>
             <Route path="colors" element={<ColorsPage/>}/>
+            <Route path="users" element={<UsersPage/>}/>
             <Route path="/*" element={<Navigate replace to="/profile" />} />
           </Route>:
           <>

@@ -47,6 +47,12 @@ export const Menu:React.FC = () =>{
 					</NavLink>
 				</li>
 				<li>
+					<NavLink to="/users">
+						<span className="icon"><i className="fas fa-users"></i></span>
+						<span className="title">users</span>
+					</NavLink>
+				</li>
+				<li>
 					<div className="falseLink" onClick={logout}>
 						<span className="icon"><i className="fas fa-sign-out-alt"></i></span>
 						<span className="title">Logout</span>

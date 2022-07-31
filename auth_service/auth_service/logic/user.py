@@ -67,9 +67,9 @@ async def deleteUser(id)->FunctionRespons:
     if not u:
         logger.error(f"none user")
         return FunctionRespons(status = TypeRespons.NOT_FOUND, detail="user not found")
-    message = "Account deleted name = " + u.UserName
+    message = "Account deleted name = " + u.name
     # await send_email("Account smart home",u.UserEmail,message)
-    logger.info(f"user delete. id:{id}. user name:{u.UserName}")
+    logger.info(f"user delete. id:{id}. user name:{u.name}")
     await u.delete()
     return FunctionRespons(status = TypeRespons.OK)
 
@@ -86,10 +86,10 @@ async def getUsers()->FunctionRespons:
             url = image.url
         outUsers.append(UserSchema(
             id=item.id,
-            name=item.UserName,
-            surname=item.UserSurname,
-            email=item.UserEmail,
-            level=item.UserLevel,
+            name=item.name,
+            surname=item.surname,
+            email=item.email,
+            level=item.level,
             imageURL=url
         ))
     return FunctionRespons(status = TypeRespons.OK, data=outUsers)
