@@ -1,9 +1,8 @@
-
-
 FROM node:16
 
 WORKDIR /client
 
+ARG REACT_APP_REGISTER_USER=False
 ARG REACT_APP_WS_HOST
 
 COPY . /client

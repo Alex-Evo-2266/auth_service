@@ -15,6 +15,8 @@ export const UsersPage = () => {
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const {loading,request, error, clearError} = useHttp();
 
+	const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() == "true")
+
 	useEffect(()=>{
 		if (error)
 			alert.show(AlertType.ERROR, "fetch error", error)
@@ -28,15 +30,6 @@ export const UsersPage = () => {
 		setUsers(data);
 		setAllUsers(data)
 	},[request, dataAuth.token])
-
-	const searchout = useCallback((search)=>{
-		if(search===""){
-			setUsers(allUsers)
-			return
-		}
-		let array = allUsers.filter(item => (item.name.toLowerCase().indexOf(search.toLowerCase())!==-1)||(item.surname.toLowerCase().indexOf(search.toLowerCase())!==-1))
-		setUsers(array)
-	},[allUsers])
 
 	useEffect(()=>{
 		updataUsers()
@@ -69,7 +62,11 @@ export const UsersPage = () => {
 					</div>
 				</div>
 			</div>
-			<div onClick={add} className="floating-btn">+</div>
+			{
+				(registerPermission)?
+				<div onClick={add} className="floating-btn">+</div>:
+				null
+			}
 		</>
 	)
 }
