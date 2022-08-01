@@ -22,7 +22,7 @@ const App:React.FC = ()=>{
   useEffect(()=>{
     updateBackground([])
     setTheme(null)
-  },[updateBackground])
+  },[updateBackground, setTheme])
 
   return (
     <>

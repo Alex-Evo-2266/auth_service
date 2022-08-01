@@ -78,7 +78,7 @@ export const DetailImage:React.FC<DetailImageProps> = (props)=>{
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	return(
 		<>

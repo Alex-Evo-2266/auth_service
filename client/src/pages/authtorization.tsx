@@ -1,17 +1,16 @@
-import React, {useState, useEffect, useContext, useCallback} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import { useDispatch } from 'react-redux';
 import { useAlert } from '../hooks/alert.hook';
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useTypeSelector } from "../hooks/useTypeSelector";
 // import {Link} from 'react-router-dom'
 import {methods, useHttp} from '../hooks/http.hook'
-import { AlertType, AlertTypeAction } from '../store/reducers/alertReducer';
+import { AlertType } from '../store/reducers/alertReducer';
 
 export const AuthtorizePage = function (){
 	const dispatch = useDispatch()
-	let navigate = useNavigate();
-	const alert = useAlert()
-	const {loading, request, error, clearError} = useHttp();
+	const {show} = useAlert()
+	const {request, error, clearError} = useHttp();
 	const dataAuth = useTypeSelector(state=>state.auth)
 	let [searchParams] = useSearchParams();
 	console.log(searchParams, searchParams.get("g"))
@@ -21,11 +20,11 @@ export const AuthtorizePage = function (){
 
 	useEffect(()=>{
 		if (error)
-			alert.show(AlertType.ERROR, "fetch error", error)
+			show(AlertType.ERROR, "fetch error", error)
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, show])
 
 	const	oauth = useCallback(async(response_type:string, client_id:string, redirect_uri:string, scope:string, state:string, token:string)=>{
 		const data = await request(`/api/auth/authorize?response_type=${response_type}&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${state}`, methods.GET, null, {Authorization: `Bearer ${token}`})
@@ -46,8 +45,8 @@ export const AuthtorizePage = function (){
 				oauth(response_type, client_id, redirect_uri, scope, state, dataAuth.token)
 		}
 		else
-			alert.show(AlertType.ERROR, "error", "query error")
-	},[dataAuth.isAuthenticated])
+			show(AlertType.ERROR, "error", "query error")
+	},[dataAuth.isAuthenticated, show, dataAuth.token, oauth, searchParams])
 
 	const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setForm({ ...form, [event.target.name]: event.target.value })
@@ -72,7 +71,7 @@ export const AuthtorizePage = function (){
 						oauth(response_type, client_id, redirect_uri, scope, state, data.token)
 				}
 				else
-					alert.show(AlertType.ERROR, "error", "query error")
+					show(AlertType.ERROR, "error", "query error")
 			}
 		} catch (e) {
 			console.error(e);
@@ -96,6 +95,7 @@ export const AuthtorizePage = function (){
 				<input required type="password" name="password" value={form.password} onChange={changeHandler}/>
 				<label>Password</label>
 			</div>
+			<div className='pass' onClick={newpass}>Forgot Password?</div>
 			<input type="submit" value="Login"/>
 		</form>
 	</div>

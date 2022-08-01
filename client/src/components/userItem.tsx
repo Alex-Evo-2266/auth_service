@@ -1,4 +1,4 @@
-import React,{useContext,useEffect} from 'react'
+import React,{useEffect} from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useAlert } from '../hooks/alert.hook'
@@ -17,16 +17,16 @@ interface IProp{
 export const UserItem = (prop:IProp)=>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const dispatch = useDispatch()
-	const alert = useAlert()
+	const {show} = useAlert()
 	const {request, error, clearError} = useHttp();
 
 	useEffect(()=>{
 		if (error)
-			alert.show(AlertType.ERROR, "fetch error", error)
+			show(AlertType.ERROR, "fetch error", error)
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, show])
 
 	return(
 		<div className="userElement">

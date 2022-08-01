@@ -17,9 +17,9 @@ export const DialogMessage:React.FC = () =>{
 		<div className="dialog_wrapper">
 			<div className="backdrop" onClick={()=>dispatch({type:DialogTypeAction.DIALOG_HIDE})}></div>
 			{
-				(dialog.type == DialogType.CONFIRMATION)?
+				(dialog.type === DialogType.CONFIRMATION)?
 				<ConfirmationDialog/>:
-				(dialog.type == DialogType.TEXT)?
+				(dialog.type === DialogType.TEXT)?
 				<TextDialog/>:
 				<AlertDialog/>
 			}

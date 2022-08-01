@@ -1,4 +1,4 @@
-import { BackgroundTypes, IBackground, Time } from "../interfaces/ImageInterfaces"
+import { Time } from "../interfaces/ImageInterfaces"
 import { useCallback } from "react"
 import { colors, IColors, night_colors } from "../interfaces/colorInterfaces";
 import { useTypeSelector } from "./useTypeSelector";
@@ -6,7 +6,7 @@ import { useTypeSelector } from "./useTypeSelector";
 export const useColor = ()=>{
 	const dataConfig = useTypeSelector(state => state.userConfig)
 
-	function LightenDarkenColor(col:string, amt:number) {
+	const LightenDarkenColor = useCallback((col:string, amt:number) => {
 		var usePound = false;
 		if (col[0] === "#") {
 			col = col.slice(1);
@@ -23,9 +23,9 @@ export const useColor = ()=>{
 		if (g > 255) g = 255;
 		else if (g < 0) g = 0;
 		return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
-	}
+	},[])
 
-	const textColor = (fon:string)=>{
+	const textColor = useCallback((fon:string)=>{
 		let color = "gray"
 		if (fon[0] === "#") {
 			fon = fon.slice(1);
@@ -39,14 +39,15 @@ export const useColor = ()=>{
 		  color="#fff";
 		}
 		return color;
-	}
+	},[])
 
-	const glassColor = (fon:string)=>{
+	const glassColor = useCallback((fon:string)=>{
 		if (fon.length === 4)
 			return fon + "a"
 		return fon + "aa"
-	}
-	function setColors(data:IColors) {
+	},[])
+
+	const setColors = useCallback((data:IColors)=>{
 		console.log("set color")
 		document.body.style.setProperty('--color-base',data.color1)
 		document.body.style.setProperty('--color-normal',data.color2)
@@ -63,7 +64,7 @@ export const useColor = ()=>{
 		document.body.style.setProperty('--text-base',textColor(data.color1))
 		document.body.style.setProperty('--text-normal',textColor(data.color2))
 		document.body.style.setProperty('--text-active',textColor(data.active))
-	}
+	},[LightenDarkenColor, glassColor, textColor])
 
 	const getTime = useCallback(():Time=>{
 		var Digital=new Date()
@@ -79,7 +80,7 @@ export const useColor = ()=>{
 		return Time.DAY
 	},[])
 	
-	const setTheme = (data:{colors:IColors, night_colors:IColors, special_colors:IColors}|null)=>{
+	const setTheme = useCallback((data:{colors:IColors, night_colors:IColors, special_colors:IColors}|null)=>{
 		if (dataConfig.special_topic)
 		{
 			if (!data)
@@ -100,7 +101,7 @@ export const useColor = ()=>{
 			else
 				setColors(data.colors)
 		}
-	}
+	},[setColors, getTime, dataConfig.special_topic])
 
 	return { setTheme, setColors }
 }

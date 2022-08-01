@@ -6,7 +6,7 @@ import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { IAuthState } from "../../interfaces/authInterfaces";
 import { IUser } from "../../interfaces/profile";
-import { AlertType, AlertTypeAction } from "../../store/reducers/alertReducer";
+import { AlertType } from "../../store/reducers/alertReducer";
 
 export const ProfilePage:React.FC = () =>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
@@ -27,7 +27,7 @@ export const ProfilePage:React.FC = () =>{
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	const getUser = useCallback(async () => {
 		const data = await request("/api/users", methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})

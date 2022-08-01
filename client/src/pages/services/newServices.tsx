@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
@@ -13,7 +13,7 @@ interface IProp{
 
 export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
 	const alert = useAlert()
-	const { request, error, clearError, loading } = useHttp()
+	const { request, error, clearError } = useHttp()
 	const dataAuth = useTypeSelector(state=>state.auth)
 	const [newservice, setNewService] = useState<IService>(
 		{
@@ -39,7 +39,7 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
 	}
 
 	const save = async()=>{
-		if (service.title == "" || service.default_redirect_uri == "")
+		if (service.title === "" || service.default_redirect_uri === "")
 			return alert.show(AlertType.ERROR, "invalid data", "empty string")
 		const data: IService = await request("/api/app/create", methods.POST, service, {Authorization: `Bearer ${dataAuth.token}`})
 		console.log(data)
@@ -56,7 +56,7 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	const hide = ()=>{
 		if (prop.update)

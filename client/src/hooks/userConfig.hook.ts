@@ -9,21 +9,21 @@ import { useTypeSelector } from "./useTypeSelector"
 export const useUserConfig = ()=>{
 	const dispatch = useDispatch()
 	const {request, error, clearError} = useHttp()
-	const alert = useAlert()
+	const {show} = useAlert()
 	const dataAuth = useTypeSelector(state => state.auth)
 
 	useEffect(()=>{
 		if (!error) return ;
-				alert.show(AlertType.ERROR, "fetch error", error)
+				show(AlertType.ERROR, "fetch error", error)
 		return ()=>{
 		  clearError();
 		}
-	  },[error, clearError])
+	  },[error, clearError, show])
 
 	const updata = useCallback(async ()=>{
 		const data = await request('/api/users/config', methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
 		dispatch({type: UserConfigTypesActions.INSERT_USER_CONFIG, payload:data})
-	},[])
+	},[request, dispatch, dataAuth.token])
 
 	return { updata }
 }

@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Loading } from "../../components/loading";
 import { ServiceItem } from "../../components/serviceItem";
 import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { IAuthState } from "../../interfaces/authInterfaces";
-import { IUser } from "../../interfaces/profile";
 import { IService } from "../../interfaces/services";
-import { AlertType, AlertTypeAction } from "../../store/reducers/alertReducer";
+import { AlertType } from "../../store/reducers/alertReducer";
 import { AddServicePage } from "./newServices";
 import { ServicePage } from "./service";
 
@@ -26,7 +24,7 @@ export const ServicesPage:React.FC = () =>{
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	const getApps = useCallback(async () => {
 		const data = await request("/api/app", methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
@@ -36,7 +34,7 @@ export const ServicesPage:React.FC = () =>{
 			console.log(service, data)
 			if (service)
 			{
-				let serviceItem = data.filter((item:IService)=>item.client_id == service.client_id)
+				let serviceItem = data.filter((item:IService)=>item.client_id === service.client_id)
 				console.log(serviceItem)
 				if (serviceItem.length)
 					setService(null)
@@ -44,7 +42,7 @@ export const ServicesPage:React.FC = () =>{
 			}
 		}
 
-	},[request, dataAuth.token])
+	},[request, dataAuth.token, service])
 
 	useEffect(()=>{
 		getApps()

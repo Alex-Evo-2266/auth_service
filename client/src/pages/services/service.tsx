@@ -1,15 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Loading } from "../../components/loading";
 import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
-import { IAuthState } from "../../interfaces/authInterfaces";
-import { IUser } from "../../interfaces/profile";
 import { IService } from "../../interfaces/services";
-import { AlertType, AlertTypeAction } from "../../store/reducers/alertReducer";
-import { AddServicePage } from "./newServices";
+import { AlertType } from "../../store/reducers/alertReducer";
 import { DialogType, DialogTypeAction } from "../../store/reducers/dialogReducer";
 
 interface IProp{
@@ -22,7 +17,7 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 	const alert = useAlert()
 	const dispatch = useDispatch()
 	const dataAuth = useTypeSelector(state=>state.auth)
-	const { request, error, clearError, loading } = useHttp()
+	const { request, error, clearError } = useHttp()
 	const [service, setService] = useState<IService>(props.data)
 
 	const hidef = ()=>{
@@ -36,7 +31,7 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	const del = async()=>{
 		dispatch({type:DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"delete?", text:"delete client app", callback:async()=>{
@@ -54,7 +49,7 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 	}
 
 	const save = async()=>{
-		if (service.title == "" || service.default_redirect_uri == "")
+		if (service.title === "" || service.default_redirect_uri === "")
 			return alert.show(AlertType.ERROR, "invalid data", "empty string")
 		const data = await request("/api/app", methods.PUT, service, {Authorization: `Bearer ${dataAuth.token}`})
 		if (!data)

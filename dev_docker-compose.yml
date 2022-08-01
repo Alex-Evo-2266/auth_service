@@ -18,6 +18,8 @@ services:
     build:
       context: ./client
       dockerfile: dev_Dockerfile
+      args:
+        REACT_APP_REGISTER_USER: ${REGISTER_USER}
     command: npm run start
     ports:
       - 3000:3000

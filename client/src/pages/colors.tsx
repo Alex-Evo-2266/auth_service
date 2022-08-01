@@ -38,7 +38,7 @@ export const ColorsPage:React.FC = ()=>{
 
 	useEffect(()=>{
 		dispatch({type: MenuTypesActions.MENU_SET_NAME, payload:{title:"Colors"}})
-	},[])
+	},[dispatch])
 
 	const getColors = useCallback(async()=>{
 		const data = await request("/api/color", methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
@@ -55,7 +55,7 @@ export const ColorsPage:React.FC = ()=>{
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	const changeHandler = (event:React.ChangeEvent<HTMLInputElement>)=>{
 		setColor(prev=>({...prev, [event.target.name]:event.target.value}))
@@ -95,7 +95,7 @@ export const ColorsPage:React.FC = ()=>{
 			}
 		]
 		dispatch({type:DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.CONFIRMATION, title:"action", items:items, callback:async(data:any)=>{
-			if (data.data == "DELETE")
+			if (data.data === "DELETE")
 				await request(`/api/color/${id}`, methods.DELETE, null, {Authorization: `Bearer ${dataAuth.token}`})
 			else
 				await request(`/api/users/color/${data.data}/set/${id}`, methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})

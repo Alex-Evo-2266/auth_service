@@ -1,4 +1,4 @@
-import React, {useEffect,useContext,useRef,useState} from 'react'
+import React, {useEffect,useRef,useState} from 'react'
 import { useDispatch } from 'react-redux';
 import {methods, useHttp} from '../hooks/http.hook'
 import { useTypeSelector } from '../hooks/useTypeSelector';
@@ -94,7 +94,7 @@ export const ImagesInput:React.FC<ImagesInputProps> = ({update}) =>{
     return ()=>{
       clearError();
     }
-  },[error, clearError])
+  },[error, clearError, dispatch])
 
   const inputClick = ()=>{
     inputRef?.current?.click()

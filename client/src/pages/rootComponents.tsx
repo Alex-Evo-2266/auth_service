@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { Alert } from "../components/alert";
-import { DialogMessage } from "../components/dialog/dialog";
 import { Menu } from "../components/menu";
 import { useBackgraund } from "../hooks/background.hook";
 import { useColor } from "../hooks/color.hook";
@@ -21,7 +19,7 @@ export const RootComponents:React.FC = () =>{
 	useEffect(()=>{
 		updateBackground(dataConfig.backgrounds, dataConfig.special_topic)
 		setTheme({colors: dataConfig.colors, night_colors:dataConfig.night_colors, special_colors:dataConfig.special_colors})
-	},[dataConfig])
+	},[dataConfig, updateBackground, setTheme])
 
 	return(
 		<>

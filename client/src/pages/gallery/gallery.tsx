@@ -27,7 +27,7 @@ export const GalleryPage:React.FC = () => {
 		} catch (e) {
 			dispatch({type:AlertTypeAction.ALERT_SHOW, payload:{type:AlertType.ERROR, title: "fetch error", text:e}})
 		}
-	},[authData.token,request])
+	},[authData.token, request, dispatch])
 
   const deleteImg = (id:number)=>{
     dispatch({type: DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"Delete image", text:"delete image?", callback:async()=>{
@@ -75,7 +75,7 @@ export const GalleryPage:React.FC = () => {
     return ()=>{
       clearError();
     }
-  },[error, clearError])
+  },[error, clearError, alert])
 
   useEffect(()=>{
     dispatch({type:MenuTypesActions.MENU_SET_NAME, payload:{title:"Galery"}})

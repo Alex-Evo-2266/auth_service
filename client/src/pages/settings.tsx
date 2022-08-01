@@ -22,7 +22,7 @@ export const SettingsPage:React.FC = ()=>{
 
 	useEffect(()=>{
 		dispatch({type: MenuTypesActions.MENU_SET_NAME, payload:{title:"Settings"}})
-	},[])
+	},[dispatch])
 
 	const click = (event: React.ChangeEvent<HTMLInputElement>)=>{
 		let data:IUserConfigState = {...dataConfig, [event.target.name]:event.target.checked}
@@ -35,7 +35,7 @@ export const SettingsPage:React.FC = ()=>{
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	const save = async()=>{
 		let send_data:ISendData = {

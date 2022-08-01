@@ -1,4 +1,3 @@
-import { useBackgraund } from "../../hooks/background.hook"
 import { IBackground } from "../../interfaces/ImageInterfaces"
 import { colors, IColors, night_colors } from "../../interfaces/colorInterfaces";
 

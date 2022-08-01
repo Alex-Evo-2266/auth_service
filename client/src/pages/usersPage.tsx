@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useCallback,useContext} from 'react'
+import React,{useState,useEffect,useCallback} from 'react'
 import { Loading } from '../components/loading'
 import { UserItem } from '../components/userItem'
 import { useAlert } from '../hooks/alert.hook'
@@ -15,7 +15,7 @@ export const UsersPage = () => {
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const {loading,request, error, clearError} = useHttp();
 
-	const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() == "true")
+	const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() === "true")
 
 	useEffect(()=>{
 		if (error)
@@ -23,7 +23,7 @@ export const UsersPage = () => {
     	return ()=>{
      		clearError();
     	}
-	},[error, clearError])
+	},[error, clearError, alert])
 
 	const updataUsers = useCallback(async()=>{
 		const data = await request('/api/users/all', methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})

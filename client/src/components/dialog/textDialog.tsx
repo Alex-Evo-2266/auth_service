@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
-import { DialogType, DialogTypeAction } from "../../store/reducers/dialogReducer";
+import { DialogTypeAction } from "../../store/reducers/dialogReducer";
 
 export const TextDialog:React.FC = () =>{
 	const dialog = useTypeSelector(state=>state.dialog)

@@ -6,10 +6,24 @@
 	width: 400px;
 	background: white;
 	border-radius: 10px;
+	.auth-switch{
+		display: flex;
+		h2{
+			width: 100%;
+			text-align: center;
+			color: var(--color-active);
+			padding: 10px 0 10px 0;
+			border-bottom: 1px solid silver;
+			&.active{
+				background: var(--color-active);
+				color: var(--text-active);
+			}
+		}
+	}
 	h1{
 		text-align: center;
 		color: var(--color-active);
-		padding: 0 0 20px 0;
+		padding: 10px 0 10px 0;
 		border-bottom: 1px solid silver;
 	}
 	form{
