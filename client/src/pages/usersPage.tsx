@@ -7,15 +7,18 @@ import { useTypeSelector } from '../hooks/useTypeSelector'
 import { IAuthState } from '../interfaces/authInterfaces'
 import { IUser } from '../interfaces/profile'
 import { AlertType } from '../store/reducers/alertReducer'
+import { AddPage } from './addUser'
 
 export const UsersPage = () => {
 	const [users, setUsers] = useState<IUser[]>([])
+	const [createUser, setCreateUser] = useState<boolean>(false)
 	const [allUsers, setAllUsers] = useState<IUser[]>([])
 	const alert = useAlert()
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const {loading,request, error, clearError} = useHttp();
 
-	const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() === "true")
+	// const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() === "true")
+	const registerPermission = false
 
 	useEffect(()=>{
 		if (error)
@@ -36,8 +39,13 @@ export const UsersPage = () => {
 	},[updataUsers])
 
 	const add = ()=>{
-
+		setCreateUser(true)
 	}
+
+	if (createUser)
+		return(
+			<AddPage />
+		)
 
 	if(loading){
 		return(
@@ -63,7 +71,7 @@ export const UsersPage = () => {
 				</div>
 			</div>
 			{
-				(registerPermission)?
+				(!registerPermission)?
 				<div onClick={add} className="floating-btn">+</div>:
 				null
 			}

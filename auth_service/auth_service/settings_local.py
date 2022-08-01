@@ -8,3 +8,5 @@ MYSQL_PORT = "3306"
 # DB_URL = "mysql+pymysql://roothome:root@localhost:3306/SmartHome"
 
 DEBUG = True
+
+REGISTER_USER = True

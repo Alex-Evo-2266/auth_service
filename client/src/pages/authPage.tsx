@@ -10,6 +10,12 @@ interface ILogin{
 	password: string
 }
 
+interface IRegister{
+	email: string,
+	name: string,
+	password: string
+}
+
 export const AuthPage = function (){
 	const dispatch = useDispatch()
 	const {show} = useAlert()
@@ -17,9 +23,13 @@ export const AuthPage = function (){
 	const [form, setForm] = useState<ILogin>({
 		name: '', password: ''
 	});
+	const [regform, setregForm] = useState<IRegister>({
+		name: '', password: '', email: ''
+	});
 	const [registrationPage, setRegistrationPage] = useState<boolean>(false)
 
-	const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() === "true")
+	// const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() === "true")
+	const registerPermission = false
 
 	console.log(registerPermission, process.env.REACT_APP_REGISTER_USER)
 
@@ -35,6 +45,10 @@ export const AuthPage = function (){
 		setForm({ ...form, [event.target.name]: event.target.value })
 	}
 
+	const changeRegHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setregForm({ ...regform, [event.target.name]: event.target.value })
+	}
+
 	const loginHandler = async (event:React.FormEvent) => {
 		event.preventDefault();
 		try {
@@ -46,24 +60,29 @@ export const AuthPage = function (){
 		}
 	}
 
+	const registerHandler = async (event:React.FormEvent) => {
+		event.preventDefault();
+		try {
+			await request('/api/users/create', methods.POST, {...regform})
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
 	const newpass = ()=>{
 		console.log("not functional");
 	}
 
-	if (registrationPage)
-		return (
-			null
-		)
-
 	return(
 	<div className="container-auth">
 		<div className="auth-switch">
-			<h2 onClick={()=>setRegistrationPage(true)}>Login</h2>
+			<h2 className={`${(!registrationPage)?"active":""}`} onClick={()=>setRegistrationPage(false)}>Login</h2>
 			{
-				(registerPermission)?<h2 onClick={()=>setRegistrationPage(false)}>Registration</h2>:null
+				(registerPermission)?<h2 className={`${(registrationPage)?"active":""}`} onClick={()=>setRegistrationPage(true)}>Registration</h2>:null
 			}
 		</div>
-		<form onSubmit={loginHandler}>
+		<div className="auth-content">
+		<form className={`${(!registrationPage)?"show":""}`} onSubmit={loginHandler}>
 			<div className="input-data txt_f">
 				<input required type="text" name="name" value={form.name} onChange={changeHandler}/>
 				<label>Name</label>
@@ -75,6 +94,24 @@ export const AuthPage = function (){
 			<div className='pass' onClick={newpass}>Forgot Password?</div>
 			<input type="submit" value="Login"/>
 		</form>
+		{(registerPermission)?
+		<form className={`${(registrationPage)?"show":""}`} onSubmit={registerHandler}>
+			<div className="input-data txt_f">
+				<input required type="text" name="name" value={regform.name} onChange={changeRegHandler}/>
+				<label>Name</label>
+			</div>
+			<div className="input-data txt_f">
+				<input required type="text" name="email" value={regform.email} onChange={changeRegHandler}/>
+				<label>Email</label>
+			</div>
+			<div className="input-data txt_f">
+				<input required type="password" name="password" value={regform.password} onChange={changeRegHandler}/>
+				<label>Password</label>
+			</div>
+			<input type="submit" value="Register"/>
+		</form>:
+		null}
+		</div>
 	</div>
 	)
 }

@@ -7,3 +7,9 @@ MYSQL_HOST = os.environ.get("AUTH_SERVICE_BD_HOST")
 MYSQL_PORT = os.environ.get("AUTH_SERVICE_BD_PORT")
 
 DEBUG = False
+
+register_user_str = os.environ.get("REGISTER_USER")
+
+REGISTER_USER = register_user_str.lower() in ['true', '1', 'y', 'yes']
+
+print(REGISTER_USER)

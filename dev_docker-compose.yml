@@ -38,6 +38,7 @@ services:
       AUTH_SERVICE_BD_NAME: ${MYSQL_DATABASE}
       AUTH_SERVICE_BD_USER: ${MYSQL_USER}
       AUTH_SERVICE_BD_PASSWORD: ${MYSQL_PASSWORD}
+      REGISTER_USER: "false"
     expose:
       - 8000
     ports:

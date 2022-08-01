@@ -26,9 +26,27 @@
 		padding: 10px 0 10px 0;
 		border-bottom: 1px solid silver;
 	}
+	.auth-content{
+		display: flex;
+		position: relative;
+		height: 300px;
+		overflow: hidden;
+		form{
+			position: absolute;
+			transition: .5s;
+			padding: 0 40px;
+			width: calc(400px - 80px);
+			&:first-child{
+				left: -100%;
+				&.show{left:0}
+			}
+			&:last-child{
+				right: -100%;
+				&.show{right:0}
+			}
+		}
+	}
 	form{
-		padding: 0 40px;
-		box-sizing: border-box;
 		.txt_f{
 			margin: 30px 0;
 		}

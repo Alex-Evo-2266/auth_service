@@ -35,9 +35,9 @@ export const ProfileEditPage:React.FC = () =>{
 		if (data)
 			setUser({
 				id: data.id,
-				name: data.name,
-				surname: data.surname,
-				email: data.email,
+				name: data.name ?? "",
+				surname: data.surname ?? "",
+				email: data.email ?? "",
 				level: data.level,
 				imageURL :data.imageURL || ""
 			})

@@ -47,8 +47,8 @@ export const UserItem = (prop:IProp)=>{
 					<Link className="editBtn" to="/profile/edit">Edit</Link>:
 					(dataAuth.level===3)?
 					<button className="deletBtn" onClick={()=>{
-						dispatch({type: DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"delete?", text:"delete client app", callback:async ()=>{
-							await request(`/api/users/${prop.user.id}`, methods.POST, null, {Authorization: `Bearer ${dataAuth.token}`})
+						dispatch({type: DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"delete?", text:"delete user?", callback:async ()=>{
+							await request(`/api/users/${prop.user.id}`, methods.DELETE, null, {Authorization: `Bearer ${dataAuth.token}`})
 							if (prop.updata)
 								prop.updata()
 						}}})
