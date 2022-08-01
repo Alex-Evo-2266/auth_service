@@ -42,9 +42,11 @@ export const UsersPage = () => {
 		setCreateUser(true)
 	}
 
+	const hide = () => setCreateUser(false)
+
 	if (createUser)
 		return(
-			<AddPage />
+			<AddPage updata={updataUsers} hide={hide}/>
 		)
 
 	if(loading){

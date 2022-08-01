@@ -54,7 +54,7 @@ export const AuthPage = function (){
 		try {
 			const data = await request('/api/auth/login', methods.POST, {...form})
 			if(data)
-				dispatch({type: "LOGIN", payload:{id: data.userId, level: data.userLavel, token: data.token}})
+				dispatch({type: "LOGIN", payload:{id: data.userId, level: data.userLevel, token: data.token}})
 		} catch (e) {
 			console.error(e);
 		}

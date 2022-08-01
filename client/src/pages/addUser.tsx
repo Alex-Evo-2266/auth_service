@@ -13,8 +13,8 @@ interface IRegister{
 }
 
 interface IProp{
-	hide?: ()=>{}
-	updata?: ()=>{}
+	hide?: ()=>void,
+	updata?: ()=>void
 }
 
 
