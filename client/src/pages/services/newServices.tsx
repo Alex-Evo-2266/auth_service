@@ -73,15 +73,12 @@ export const AddServicePage:React.FC<IProp> = (prop: IProp = {}) =>{
 	return(
 		<div className="add-service-containre">
 			<h2>create service</h2>
-			<p className="separation"></p>
-			<h4>title</h4>
 			<div className="input-container">
 				<div className="input-data">
 					<input required type="text" name="title" value={service.title} onChange={changeHeandler}/>
 					<label>title</label>
 				</div>
 			</div>
-			<h4>redirect uri</h4>
 			<div className="input-container">
 				<div className="input-data">
 					<input required type="text" name="default_redirect_uri" value={service.default_redirect_uri} onChange={changeHeandler}/>

@@ -83,11 +83,11 @@ export const AuthPage = function (){
 		<form className={`${(!registrationPage)?"show":""}`} onSubmit={loginHandler}>
 			<div className="input-data txt_f">
 				<input required type="text" name="name" value={form.name} onChange={changeHandler}/>
-				<label>Name</label>
+				<label className='silver'>Name</label>
 			</div>
 			<div className="input-data txt_f">
 				<input required type="password" name="password" value={form.password} onChange={changeHandler}/>
-				<label>Password</label>
+				<label className='silver'>Password</label>
 			</div>
 			<div className='pass' onClick={newpass}>Forgot Password?</div>
 			<input type="submit" value="Login"/>
@@ -96,15 +96,15 @@ export const AuthPage = function (){
 		<form className={`${(registrationPage)?"show":""}`} onSubmit={registerHandler}>
 			<div className="input-data txt_f">
 				<input required type="text" name="name" value={regform.name} onChange={changeRegHandler}/>
-				<label>Name</label>
+				<label className='silver'>Name</label>
 			</div>
 			<div className="input-data txt_f">
 				<input required type="text" name="email" value={regform.email} onChange={changeRegHandler}/>
-				<label>Email</label>
+				<label className='silver'>Email</label>
 			</div>
 			<div className="input-data txt_f">
 				<input required type="password" name="password" value={regform.password} onChange={changeRegHandler}/>
-				<label>Password</label>
+				<label className='silver'>Password</label>
 			</div>
 			<input type="submit" value="Register"/>
 		</form>:

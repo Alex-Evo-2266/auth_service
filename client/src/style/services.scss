@@ -35,8 +35,26 @@
 	box-shadow: 0 0 8px #000;
 	margin-top: 50%;
 	transform: translateY(calc(-50% - 20px));
-	h4{
-		padding-top: 15px;
+	h2{
+		padding: 16px 16px 8px;
+		font-size: 30px;
+	}
+	p{
+		font-size: 16px;
+	}
+	.input-container{
+		padding-bottom: 8px;
+	}
+	.input-data{
+		padding: 0 16px;
+		position: relative;
+		label{
+			position: absolute;
+			left: 16px;
+		}
+		input{
+			width: calc(100% - 32px);
+		}
 	}
 	input{
 		background: var(--color-normal);
@@ -54,7 +72,12 @@
 	box-shadow: 0 0 8px #000;
 	min-height: 120px;
 	font-size: 24px;
-	h5, p{
-		text-align: center;
+	h5{
+		padding: 16px 16px 8px;
+		font-size: 30px;
+	}
+	p{
+		font-size: 16px;
+		padding: 0 16px;
 	}
 }

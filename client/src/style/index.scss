@@ -26,10 +26,6 @@ body{
 	background-attachment: fixed;
 }
 
-.silver{
-	color: silver
-}
-
 @import "scrol.scss";
 @import "menu.scss";
 @import "profile.scss";
@@ -156,6 +152,9 @@ body{
 		color: var(--text-normal);
 		pointer-events: none;
 		transition: 0.3s;
+    &.silver{
+      color: silver
+    }
 	}
 }
 
@@ -176,4 +175,8 @@ body{
     margin: 5px;
     padding: 0 20px;
   }
+}
+
+.silver{
+	color: silver
 }

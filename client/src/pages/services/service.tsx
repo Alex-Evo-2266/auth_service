@@ -63,32 +63,26 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 	return(
 		<div className="add-service-containre">
 			<h2>create service</h2>
-			<p className="separation"></p>
-			<h4>title</h4>
 			<div className="input-container">
 				<div className="input-data">
-					<input required type="text" name="title" value={service.title} onChange={changeHeandler}/>
-					<label>title</label>
+					<p>title - {props.data.title}</p>
 				</div>
 			</div>
-			<h4>id</h4>
 			<div className="input-container">
 				<div className="input-data">
-					<p>{props.data.client_id}</p>
+					<p>id - {props.data.client_id}</p>
 				</div>
 			</div>
 			{
 				(props.data.client_secret)?
 				<>
-				<h4>secret</h4>
 				<div className="input-container">
 					<div className="input-data">
-						<p>{props.data.client_secret}</p>
+						<p>secret - {props.data.client_secret}</p>
 					</div>
 				</div>
 				</>:null
 			}
-			<h4>redirect uri</h4>
 			<div className="input-container">
 				<div className="input-data">
 					<input required type="text" name="default_redirect_uri" value={service.default_redirect_uri} onChange={changeHeandler}/>
