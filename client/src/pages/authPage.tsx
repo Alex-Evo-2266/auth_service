@@ -31,8 +31,6 @@ export const AuthPage = function (){
 	// const registerPermission = !!(process.env.REACT_APP_REGISTER_USER?.toLowerCase() === "true")
 	const registerPermission = false
 
-	console.log(registerPermission, process.env.REACT_APP_REGISTER_USER)
-
 	useEffect(()=>{
 		if (error)
 			show(AlertType.ERROR, "fetch error", error)

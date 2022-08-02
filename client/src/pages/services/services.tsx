@@ -31,18 +31,9 @@ export const ServicesPage:React.FC = () =>{
 		if (data)
 		{
 			setServices(data)
-			console.log(service, data)
-			if (service)
-			{
-				let serviceItem = data.filter((item:IService)=>item.client_id === service.client_id)
-				console.log(serviceItem)
-				if (serviceItem.length)
-					setService(null)
-					setService(serviceItem[0])
-			}
 		}
 
-	},[request, dataAuth.token, service])
+	},[request, dataAuth.token])
 
 	useEffect(()=>{
 		getApps()
@@ -63,7 +54,9 @@ export const ServicesPage:React.FC = () =>{
 		return <AddServicePage hide={hide} update={getApps}/>
 	
 	if (service)
-		return <ServicePage data={service} hide={()=>setService(null)} update={getApps}/>
+		return <ServicePage data={service} hide={()=>{
+			setService(null)
+		}} update={getApps}/>
 	
 	return(
 		<>

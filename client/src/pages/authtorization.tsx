@@ -27,9 +27,20 @@ export const AuthtorizePage = function (){
 	},[error, clearError, show])
 
 	const	oauth = useCallback(async(response_type:string, client_id:string, redirect_uri:string, scope:string, state:string, token:string)=>{
-		const data = await request(`/api/auth/authorize?response_type=${response_type}&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${state}`, methods.GET, null, {Authorization: `Bearer ${token}`})
-		console.log(data)
-		window.location.replace(`${redirect_uri}?code=${data.code}&state=${state}`)
+		console.log("dsfgh")
+		try{
+			const data = await request(
+				`/api/auth/authorize?response_type=${response_type}&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${state}`,
+				methods.GET,
+				null,
+				{Authorization: `Bearer ${token}`}
+			)
+			console.log("df", data)
+			window.location.replace(`${redirect_uri}?code=${data.code}&state=${state}`)
+		}catch{
+			console.error("d")
+		}
+		
 	},[request])
 
 	useEffect(()=>{
@@ -38,7 +49,7 @@ export const AuthtorizePage = function (){
 		let redirect_uri:string|null = searchParams.get("redirect_uri")
 		let scope:string|null = searchParams.get("scope")
 		let state:string|null = searchParams.get("state")
-		console.log(response_type, client_id, redirect_uri, scope, state)
+		console.log(response_type, client_id, redirect_uri, scope, state, dataAuth)
 		if (response_type && client_id && redirect_uri && scope && state)
 		{
 			if(dataAuth.isAuthenticated)
@@ -86,7 +97,8 @@ export const AuthtorizePage = function (){
 	return(
 	<div className="container-auth">
 		<h1>Login</h1>
-		<form onSubmit={loginHandler}>
+		<div className='auth-content'>
+		<form className='show' onSubmit={loginHandler}>
 			<div className="input-data txt_f">
 				<input required type="text" name="name" value={form.name} onChange={changeHandler}/>
 				<label>Name</label>
@@ -98,6 +110,7 @@ export const AuthtorizePage = function (){
 			<div className='pass' onClick={newpass}>Forgot Password?</div>
 			<input type="submit" value="Login"/>
 		</form>
+		</div>
 	</div>
 	)
 }
