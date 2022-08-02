@@ -49,11 +49,11 @@ class BearerToken(ormar.Model):
         constraints = [ormar.UniqueColumns("access_token", "refresh_token")]
 
     id: int = ormar.Integer(primary_key=True)
-    client: Optional[Client] = ormar.ForeignKey(Client, related_name="ber_toker")
+    client: Optional[Client] = ormar.ForeignKey(Client, related_name="ber_toker", nullable=True)
     user: Optional[User] = ormar.ForeignKey(User, related_name="ber_toker")
     scopes: str = ormar.Text()
-    access_token: str = ormar.String(max_length=100)
-    refresh_token: str = ormar.String(max_length=100)
+    access_token: str = ormar.String(max_length=500)
+    refresh_token: str = ormar.String(max_length=500)
     expires_at: datetime.datetime = ormar.DateTime()
 
 class AuthCode(ormar.Model):

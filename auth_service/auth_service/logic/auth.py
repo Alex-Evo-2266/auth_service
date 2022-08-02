@@ -7,8 +7,8 @@ from jwt import ExpiredSignatureError
 
 from datetime import datetime, timedelta
 
-from auth_service.models import User
-from auth_service.schemas.auth import Login, ResponseLogin, Tokens
+from auth_service.models import BearerToken, User
+from auth_service.schemas.auth import Login, ResponseLogin, Token, Tokens
 from auth_service import settings
 
 logger = logging.getLogger(__name__)
@@ -24,17 +24,31 @@ async def login(data: Login)->FunctionRespons:
 			encoded_jwt:Tokens = await create_tokens(u.id)
 			result = ResponseLogin(token=encoded_jwt.access, userId=u.id, userLevel=u.level, expires_at=encoded_jwt.expires_at)
 			logger.info(f"login user: {u.name}, id: {u.id}")
+			await BearerToken.objects.create(user=u, scopes="all", access_token=encoded_jwt.access, refresh_token=encoded_jwt.refresh, expires_at=encoded_jwt.expires_at)
 			return FunctionRespons(status = TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
 		return FunctionRespons(status = TypeRespons.ERROR, detail='invalid data')
 	except Exception as e:
 		logger.error(f"user does not exist. detail: {e}")
 		return FunctionRespons(status = TypeRespons.ERROR, detail=str(e))
 
+async def logout(user_id:int, refrash:str)->FunctionRespons:
+	user = await User.objects.get_or_none(id=user_id)
+	if not user:
+		logger.error(f"user not found")
+		return FunctionRespons(status = TypeRespons.ERROR, detail='user not found')
+	old_token = await BearerToken.objects.get_or_none(refresh_token=refrash, user=user)
+	if not old_token:
+		logger.error(f"token not found")
+		return FunctionRespons(status = TypeRespons.ERROR, detail='token not found')
+	await old_token.delete()
+	return FunctionRespons(status = TypeRespons.OK, data='ok')
+
 async def create_tokens(user_id:int)->Tokens:
 	access_toket_expire = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 	refresh_toket_expire = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
 	access_toket_expires_at = expire = datetime.utcnow() + access_toket_expire
 	refresh_toket_expires_at = expire = datetime.utcnow() + refresh_toket_expire
+	print("now", datetime.utcnow())
 	return Tokens(
 		access = await create_token(
 			data = {'user_id':user_id,},
@@ -87,8 +101,16 @@ async def refresh_token(token: str)->FunctionRespons:
 			logger.debug(f"outdated jwt")
 			return FunctionRespons(status=TypeRespons.INVALID, detail="outdated jwt")
 		u = await User.objects.get_or_none(id=data["user_id"])
+		old_token = await BearerToken.objects.get_or_none(refresh_token=token)
+		if (not old_token):
+			return FunctionRespons(status=TypeRespons.INVALID, detail="not found token")
+		print("old_token",old_token)
 		encoded_jwt = await create_tokens(u.id)
-		result = {"token":encoded_jwt.access, "userId":u.id,"userLavel":u.level}
+		old_token.access_token = encoded_jwt.access
+		old_token.refresh_token = encoded_jwt.refresh
+		old_token.expires_at = encoded_jwt.expires_at
+		await old_token.update(["access_token", "refresh_token", "expires_at"])
+		result = Token(token=encoded_jwt.access, expires_at=encoded_jwt.expires_at)
 		logger.info(f"login user: {u.name}, id: {u.id}")
 		return FunctionRespons(status=TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
 	except Exception as e:

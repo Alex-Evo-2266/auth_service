@@ -46,6 +46,7 @@ export const authReducer = (state:IAuthState = initialSate(), action:ActionType)
 			return {...state, token: action.payload.token, id: action.payload.id, level: action.payload.level, isAuthenticated: !!action.payload.token}
 		case "LOGOUT":
 			localStorage.removeItem(storegeName)
+			fetch("/api/auth/logout", {method:"GET", body:null, headers:{"Authorization-Token": `Bearer ${state.token}`}});
 			return {...state, token: '', id: null, level: null, isAuthenticated: false}
 		default:
 			return state

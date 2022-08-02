@@ -33,6 +33,7 @@ class Tokens(BaseModel):
 
 class Token(BaseModel):
 	token: str
+	expires_at: datetime.datetime
 
 class ResponseCode(BaseModel):
 	client_id: str
