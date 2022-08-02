@@ -21,9 +21,9 @@ export const ServicesPage:React.FC = () =>{
 	useEffect(()=>{
 		if (error)
 			alert.show(AlertType.ERROR, "fetch error", error)
-    	return ()=>{
-     		clearError();
-    	}
+		return ()=>{
+	 		clearError();
+		}
 	},[error, clearError, alert])
 
 	const getApps = useCallback(async () => {
@@ -32,14 +32,6 @@ export const ServicesPage:React.FC = () =>{
 		{
 			setServices(data)
 			console.log(service, data)
-			if (service)
-			{
-				let serviceItem = data.filter((item:IService)=>item.client_id === service.client_id)
-				console.log(serviceItem)
-				if (serviceItem.length)
-					setService(null)
-					setService(serviceItem[0])
-			}
 		}
 
 	},[request, dataAuth.token, service])

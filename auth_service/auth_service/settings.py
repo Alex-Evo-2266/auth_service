@@ -22,7 +22,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 15
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 2
 SECRET_JWT_KEY = "dxkhbg5hth56"
 SECRET_AUTH_CODE_KEY = "dxkhbgdgfhjkljkh5hth56"
-SECRET_REFRESH_JWT_KEY = "dxkhbgefrthjyuvligukytrtyug5hth56"
+SECRET_REFRESH_JWT_KEY = "sz345657rytyk5yeytw433frthjyuvligukytrtyug5hth56"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
