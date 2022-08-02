@@ -38,6 +38,7 @@ export const useColor = ()=>{
 		{
 		  color="#fff";
 		}
+		console.log(r, g, b,color)
 		return color;
 	},[])
 

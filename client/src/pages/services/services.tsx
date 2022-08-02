@@ -21,9 +21,9 @@ export const ServicesPage:React.FC = () =>{
 	useEffect(()=>{
 		if (error)
 			alert.show(AlertType.ERROR, "fetch error", error)
-    	return ()=>{
-     		clearError();
-    	}
+		return ()=>{
+	 		clearError();
+		}
 	},[error, clearError, alert])
 
 	const getApps = useCallback(async () => {

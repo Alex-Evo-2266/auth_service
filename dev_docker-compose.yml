@@ -45,6 +45,7 @@ services:
       - 5050:8000
     volumes:
       - media_voluem:/home/auth_service/web/media
+      - ./auth_service/auth_service:/home/smart_home/web/auth_service
     depends_on:
       - sh_db
   phpmyadmin:

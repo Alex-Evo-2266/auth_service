@@ -13,6 +13,8 @@ from auth_service import settings
 from auth_service.settings import LENGTHPASSAPP
 
 from auth_service.utils.without_keys import without_keys
+from auth_service.schemas.auth import Login, ResponseLogin, Token, TokenType, TypeResponse, TypeGrant, AuthResponse, TokenResponse
+from auth_service.logic.auth import create_tokens
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +98,7 @@ async def del_apps(client_id:str, user_id: int)->FunctionRespons:
 	await client.delete()
 	return FunctionRespons(status=TypeRespons.OK, data="ok")
 
-async def auth_code(client_id:str, redirect_uri:str, scope:str, user_id:int)->FunctionRespons:
+async def auth_code(client_id:str, redirect_uri:str, scope:List[str], user_id:int)->FunctionRespons:
 	user: User = await User.objects.get_or_none(id=user_id)
 	if not user:
 		return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
@@ -106,12 +108,38 @@ async def auth_code(client_id:str, redirect_uri:str, scope:str, user_id:int)->Fu
 	now = datetime.now()
 	print(now)
 	print(now + timedelta(minutes=15))
-	expires_at = datetime.now() + timedelta(minutes=15)
-	codes = None
+	expires_at = datetime.utcnow() + timedelta(minutes=15)
+	codes = True
 	code = ""
-	while (not codes):
+	while (codes):
 		code = strGenerator('abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 100).data
 		codes = await AuthCode.objects.get_or_none(code=code)
+		print(codes)
 	print(code)
-	await AuthCode.objects.create(client=client, user=user, scopes=scope, redirect_uri=redirect_uri, expires_at=expires_at, code=code, challenge_method="", challenge="")
+	await AuthCode.objects.create(client=client, user=user, scopes=";".join(scope), redirect_uri=redirect_uri, expires_at=expires_at, code=code, challenge_method="", challenge="")
 	return FunctionRespons(status=TypeRespons.OK, data=code)
+
+
+async def get_token(code: str, client_id: str, client_secret:str)->FunctionRespons:
+	client = await Client.objects.get_or_none(client_id=client_id)
+	if not client:
+		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
+	if client.client_secret != client_secret:
+		return FunctionRespons(status=TypeRespons.ERROR, detail="invalid secret")
+	code_obj = await AuthCode.objects.get_or_none(code=code, client=client)
+	print(code_obj)
+	print()
+	print(code_obj.expires_at)
+	print(code_obj.expires_at > datetime.utcnow())
+	if code_obj.expires_at < datetime.utcnow():
+		await code_obj.delete()
+		return FunctionRespons(status=TypeRespons.ERROR, detail="authorization code is outdated.")
+	# TokenResponse
+	tokens = await create_tokens(code_obj.user.id)
+	print(tokens)
+	arr = code_obj.scopes.split(";")
+	await code_obj.delete()
+	data = TokenResponse(access_token=tokens.access, expires_at=tokens.expires_at, token_type=TokenType.BEARER_TOKEN, refresh_token=tokens.refresh, scope=arr)
+	return FunctionRespons(status=TypeRespons.OK, data=data)
+
+
