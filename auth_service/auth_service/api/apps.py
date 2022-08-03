@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, UploadFile, File
 from auth_service.logic.apps import add_apps, del_apps, give_apps, edit_apps
 from fastapi.responses import JSONResponse
 from auth_service.schemas.base import TokenData, TypeRespons
-from auth_service.schemas.apps import AppData, CreateApps, AppFullData, AppFullData
+from auth_service.schemas.apps import AppData, AppEditData, CreateApps, AppFullData, AppFullData
 from auth_service.models import Client, User
 from auth_service.depends.auth import token_dep
 
@@ -20,9 +20,9 @@ async def add(data: CreateApps, auth_data: TokenData = Depends(token_dep)):
 		return data_app.data
 	return JSONResponse (status_code=400, content={"message": data_app.detail})
 
-@router.put("")
-async def add(data: AppData, auth_data: TokenData = Depends(token_dep)):
-	data_app = await edit_apps(data, auth_data.user_id)
+@router.patch("")
+async def edit(data: AppEditData, client_id:str, auth_data: TokenData = Depends(token_dep)):
+	data_app = await edit_apps(data, client_id, auth_data.user_id)
 	if data_app.status == TypeRespons.OK:
 		return data_app.data
 	return JSONResponse (status_code=400, content={"message": data_app.detail})

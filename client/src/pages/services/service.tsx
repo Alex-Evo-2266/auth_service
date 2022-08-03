@@ -49,9 +49,9 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 	}
 
 	const save = async()=>{
-		if (service.title === "" || service.default_redirect_uri === "")
+		if (service.default_redirect_uri === "")
 			return alert.show(AlertType.ERROR, "invalid data", "empty string")
-		const data = await request("/api/app", methods.PUT, service, {Authorization: `Bearer ${dataAuth.token}`})
+		const data = await request(`/api/app?client_id=${service.client_id}`, methods.PATCH, service, {Authorization: `Bearer ${dataAuth.token}`})
 		if (!data)
 			return
 		if (props.update)
