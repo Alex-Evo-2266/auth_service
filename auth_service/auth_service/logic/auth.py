@@ -1,5 +1,7 @@
+import asyncio
 import logging
 import bcrypt
+from auth_service.logic.old_token import OldTokens
 from auth_service.schemas.base import FunctionRespons, TokenData, TypeRespons
 import jwt
 
@@ -102,14 +104,22 @@ async def refresh_token(token: str)->FunctionRespons:
 			return FunctionRespons(status=TypeRespons.INVALID, detail="outdated jwt")
 		u = await User.objects.get_or_none(id=data["user_id"])
 		old_token = await BearerToken.objects.get_or_none(refresh_token=token)
+		encoded_jwt = None
 		if (not old_token):
-			return FunctionRespons(status=TypeRespons.INVALID, detail="not found token")
-		print("old_token",old_token)
-		encoded_jwt = await create_tokens(u.id)
-		old_token.access_token = encoded_jwt.access
-		old_token.refresh_token = encoded_jwt.refresh
-		old_token.expires_at = encoded_jwt.expires_at
-		await old_token.update(["access_token", "refresh_token", "expires_at"])
+			old_token2 = OldTokens.get_or_none(token)
+			if not old_token2:
+				return FunctionRespons(status=TypeRespons.INVALID, detail="not found token")
+			encoded_jwt = Tokens(expires_at=old_token2.expires_at, access=old_token2.new_access, refresh=old_token2.new_refresh)
+		else:
+			encoded_jwt = await create_tokens(u.id)
+			print("old_token",old_token)
+			OldTokens.add(old_token.refresh_token, old_token.access_token, encoded_jwt.refresh, encoded_jwt.access, encoded_jwt.expires_at)
+			loop = asyncio.get_running_loop()
+			loop.create_task(OldTokens.delete_delay(old_token.refresh_token, 10))
+			old_token.access_token = encoded_jwt.access
+			old_token.refresh_token = encoded_jwt.refresh
+			old_token.expires_at = encoded_jwt.expires_at
+			await old_token.update(["access_token", "refresh_token", "expires_at"])
 		result = Token(token=encoded_jwt.access, expires_at=encoded_jwt.expires_at)
 		logger.info(f"login user: {u.name}, id: {u.id}")
 		return FunctionRespons(status=TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
