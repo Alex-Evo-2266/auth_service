@@ -6,7 +6,7 @@ from auth_service.logic.apps import auth_code, get_token
 from auth_service.schemas.base import TokenData, TypeRespons
 
 from auth_service.logic.auth import refresh_token as rtoken, login as Authorization, logout
-from auth_service.schemas.auth import Login, ResponseLogin, Token, TokenType, TypeResponse, TypeGrant, AuthResponse, TokenResponse
+from auth_service.schemas.auth import Login, RefrashToken, ResponseLogin, Token, TokenType, Tokens, TypeResponse, TypeGrant, AuthResponse, TokenResponse
 
 
 router = APIRouter(
@@ -42,6 +42,14 @@ async def ref(refresh_toket: Optional[str] = Cookie(None)):
 		response = JSONResponse(status_code=200, content=p.dict())
 		response.set_cookie(key="refresh_toket", value=res.data["refresh"], httponly=True)
 		return response
+	return JSONResponse(status_code=403, content={"message": res.detail})
+
+@router.post("/refresh", response_model=Tokens)
+async def ref(data: RefrashToken):
+	res = await rtoken(data.refresh_toket)
+	if(res.status == "ok"):
+		tokens = Tokens(access=res.data["response"].token, expires_at=res.data["response"].expires_at, refresh=res.data["refresh"])
+		return tokens
 	return JSONResponse(status_code=403, content={"message": res.detail})
 
 @router.get("/authorize", response_model=AuthResponse)

@@ -31,6 +31,9 @@ class Tokens(BaseModel):
 	access: str
 	refresh: str
 
+class RefrashToken(BaseModel):
+	refresh_token: str
+
 class Token(BaseModel):
 	token: str
 	expires_at: datetime.datetime
