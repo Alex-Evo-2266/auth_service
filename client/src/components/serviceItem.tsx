@@ -10,7 +10,7 @@ export const ServiceItem:React.FC<IProp> = (props:IProp) =>{
 	return(
 		<>
 			<h5>{props.data.title}</h5>
-			<p>redirect_uris: {props.data.default_redirect_uri}</p>
+			<p>host: {props.data.default_redirect_uri}</p>
 		</>
 	)
 }

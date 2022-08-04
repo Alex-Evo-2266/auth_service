@@ -45,6 +45,7 @@
 	overflow: hidden;
 	@media (max-width: 720px){
 		width: 0;
+		overflow-y: scroll;
 	}
 	@media (min-width: 720px){
 		&:hover{

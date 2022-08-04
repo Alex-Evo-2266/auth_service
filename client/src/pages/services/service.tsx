@@ -61,6 +61,8 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 	}
 
 	return(
+		<>
+		<div className="back-close" onClick={hidef}></div>
 		<div className="add-service-containre">
 			<h2>create service</h2>
 			<div className="input-container">
@@ -86,7 +88,7 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 			<div className="input-container">
 				<div className="input-data">
 					<input required type="text" name="default_redirect_uri" value={service.default_redirect_uri} onChange={changeHeandler}/>
-					<label>redirect url</label>
+					<label>host</label>
 				</div>
 			</div>
 			<div className="btn_container">
@@ -95,5 +97,6 @@ export const ServicePage:React.FC<IProp> = (props: IProp) =>{
 				<button onClick={hidef} className="btn">exit</button>
 			</div>
 		</div>
+		</>
 	)
 }

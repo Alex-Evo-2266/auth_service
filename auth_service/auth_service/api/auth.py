@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, Query
+from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, Query, Header
 from fastapi.responses import JSONResponse
 from typing import Optional, List
 from auth_service.depends.auth import token_dep
@@ -60,9 +60,11 @@ async def authorize(response_type:TypeResponse  = Query(TypeResponse.CODE), clie
 	return JSONResponse(status_code=400, content={"message": res.detail})
 
 @router.get("/token", response_model=TokenResponse)
-async def give_token(grant_type:TypeGrant, code:str, redirect_uri:str, client_id:str, client_secret:str):
+async def give_token(Host:Optional[str] = Header(None), grant_type:TypeGrant = Query(TypeGrant.CODE), code:str = Query(...), redirect_uri:str = Query(...), client_id:str = Query(...), client_secret:str = Query(...)):
+	print(Host)
 	if (grant_type == TypeGrant.CODE):
 		tokens = await get_token(code, client_id, client_secret)
 		if tokens.status == TypeRespons.OK:
 			return tokens.data
+		return JSONResponse(status_code=400, content={"message": tokens.detail})	
 	return JSONResponse(status_code=400, content={"message": "grant_type invalid"})

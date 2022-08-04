@@ -120,6 +120,8 @@ async def get_token(code: str, client_id: str, client_secret:str)->FunctionRespo
 	if client.client_secret != client_secret:
 		return FunctionRespons(status=TypeRespons.ERROR, detail="invalid secret")
 	code_obj = await AuthCode.objects.get_or_none(code=code, client=client)
+	if not code_obj:
+		return FunctionRespons(status=TypeRespons.ERROR, detail="code not found")
 	if code_obj.expires_at < datetime.utcnow():
 		await code_obj.delete()
 		return FunctionRespons(status=TypeRespons.ERROR, detail="authorization code is outdated.")
