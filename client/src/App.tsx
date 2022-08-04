@@ -10,6 +10,7 @@ import { useBackgraund } from './hooks/background.hook';
 import { Alert } from './components/alert';
 import { DialogMessage } from './components/dialog/dialog';
 import { useColor } from './hooks/color.hook';
+import { Card } from './components/card/card';
 
 
 const App:React.FC = ()=>{
@@ -28,6 +29,7 @@ const App:React.FC = ()=>{
     <>
       <Alert/>
 			<DialogMessage/>
+			<Card/>
       <BrowserRouter>
         {router}
       </BrowserRouter>

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { Loading } from "../../components/loading";
 import { useAlert } from "../../hooks/alert.hook";
@@ -7,10 +8,28 @@ import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { IAuthState } from "../../interfaces/authInterfaces";
 import { IUser } from "../../interfaces/profile";
 import { AlertType } from "../../store/reducers/alertReducer";
+import { CardTypeAction } from "../../store/reducers/cardReducer";
+
+const CardSession:React.FC = () => {
+	return (
+		<div className="dialog_item">
+			<h2 className="dialog_title">dv</h2>
+			<div className="content content-scrollable">
+				<div className="container-list">
+				</div>
+			</div>
+			<div className="dialog_btn_container">
+				<button className="btn">cancel</button>
+				<button className="btn">ok</button>
+			</div>
+		</div>
+	)
+}
 
 export const ProfilePage:React.FC = () =>{
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
 	const { request, error, clearError, loading } = useHttp()
+	const dispatch = useDispatch()
 	const alert = useAlert()
 	const [user, setUser] = useState<IUser>({
 		id: null,
@@ -46,6 +65,10 @@ export const ProfilePage:React.FC = () =>{
 		getUser()
 	},[getUser])
 
+	const d = ()=>{
+		dispatch({type:CardTypeAction.CARD_SHOW, payload:{content:<CardSession/>}})
+	}
+
 	if (loading)
 		return <Loading/>
 	
@@ -69,6 +92,7 @@ export const ProfilePage:React.FC = () =>{
 			</div>
 			<div className="separation"></div>
 			<Link to="/profile/edit" className="btn">edit</Link>
+			<button onClick={d} className="btn">sessions</button>
 		</>
 	)
 }
