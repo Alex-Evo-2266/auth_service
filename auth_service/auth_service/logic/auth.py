@@ -4,13 +4,14 @@ import bcrypt
 from auth_service.logic.old_token import OldTokens
 from auth_service.schemas.base import FunctionRespons, TokenData, TypeRespons
 import jwt
+from typing import List, Optional
 
 from jwt import ExpiredSignatureError
 
 from datetime import datetime, timedelta
 
 from auth_service.models import BearerToken, User
-from auth_service.schemas.auth import Login, ResponseLogin, Token, Tokens
+from auth_service.schemas.auth import Login, ResponseLogin, Token, Tokens, SessionSchema
 from auth_service import settings
 
 logger = logging.getLogger(__name__)
@@ -50,7 +51,6 @@ async def create_tokens(user_id:int)->Tokens:
 	refresh_toket_expire = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
 	access_toket_expires_at = expire = datetime.utcnow() + access_toket_expire
 	refresh_toket_expires_at = expire = datetime.utcnow() + refresh_toket_expire
-	print("now", datetime.utcnow())
 	return Tokens(
 		access = await create_token(
 			data = {'user_id':user_id,},
@@ -112,7 +112,6 @@ async def refresh_token(token: str)->FunctionRespons:
 			encoded_jwt = Tokens(expires_at=old_token2.expires_at, access=old_token2.new_access, refresh=old_token2.new_refresh)
 		else:
 			encoded_jwt = await create_tokens(u.id)
-			print("old_token",old_token)
 			OldTokens.add(old_token.refresh_token, old_token.access_token, encoded_jwt.refresh, encoded_jwt.access, encoded_jwt.expires_at)
 			loop = asyncio.get_running_loop()
 			loop.create_task(OldTokens.delete_delay(old_token.refresh_token, 10))
@@ -123,5 +122,50 @@ async def refresh_token(token: str)->FunctionRespons:
 		result = Token(token=encoded_jwt.access, expires_at=encoded_jwt.expires_at)
 		logger.info(f"login user: {u.name}, id: {u.id}")
 		return FunctionRespons(status=TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
+	except Exception as e:
+		return FunctionRespons(status=TypeRespons.ERROR, detail=str(e))
+
+def	bearerTokenToSession(data:List[BearerToken])->Optional[List[SessionSchema]]:
+	arr = []
+	for item in data:
+		client_name = "auth"
+		if item.client:
+			client_name = item.client.title
+		host = ""
+		platform = ""
+		if item.host:
+			host = item.host
+		if item.platform:
+			platform = item.platform
+		arr.append(SessionSchema(id=item.id, client_name=client_name, host=host, platform=platform))
+	return arr
+
+async def get_sessions(user_id:int)->FunctionRespons:
+	try:
+		user = await User.objects.get_or_none(id=user_id)
+		if not user:
+			logger.error(f"user not found")
+			return FunctionRespons(status = TypeRespons.ERROR, detail='user not found')
+		sessions = await BearerToken.objects.all(user=user)
+		session_array = bearerTokenToSession(sessions)
+		return FunctionRespons(status=TypeRespons.OK, data=session_array)
+	except Exception as e:
+		return FunctionRespons(status=TypeRespons.ERROR, detail=str(e))
+
+async def delete_sessions(id:int, user_id:int):
+	try:
+		user = await User.objects.get_or_none(id=user_id)
+		if not user:
+			logger.error(f"user not found")
+			return FunctionRespons(status = TypeRespons.ERROR, detail='user not found')
+		session = await BearerToken.objects.get_or_none(id=id)
+		if not session:
+			logger.error(f"session not found")
+			return FunctionRespons(status = TypeRespons.ERROR, detail='session not found')
+		if session.user != user:
+			logger.error(f"session invalid")
+			return FunctionRespons(status = TypeRespons.ERROR, detail='session invalid')
+		await session.delete()
+		return FunctionRespons(status=TypeRespons.OK, data="ok")
 	except Exception as e:
 		return FunctionRespons(status=TypeRespons.ERROR, detail=str(e))

@@ -5,8 +5,8 @@ from auth_service.depends.auth import token_dep
 from auth_service.logic.apps import auth_code, get_token
 from auth_service.schemas.base import TokenData, TypeRespons
 
-from auth_service.logic.auth import refresh_token as rtoken, login as Authorization, logout
-from auth_service.schemas.auth import Login, RefrashToken, ResponseLogin, Token, TokenType, Tokens, TypeResponse, TypeGrant, AuthResponse, TokenResponse
+from auth_service.logic.auth import refresh_token as rtoken, login as Authorization, logout, get_sessions, delete_sessions
+from auth_service.schemas.auth import Login, SessionSchema, RefrashToken, ResponseLogin, Token, TokenType, Tokens, TypeResponse, TypeGrant, AuthResponse, TokenResponse
 
 
 router = APIRouter(
@@ -68,3 +68,17 @@ async def give_token(Host:Optional[str] = Header(None), grant_type:TypeGrant = Q
 			return tokens.data
 		return JSONResponse(status_code=400, content={"message": tokens.detail})	
 	return JSONResponse(status_code=400, content={"message": "grant_type invalid"})
+
+@router.get("/session", response_model=List[SessionSchema])
+async def give_session(auth_data: TokenData = Depends(token_dep)):
+	sessions = await get_sessions(auth_data.user_id)
+	if sessions.status == TypeRespons.OK:
+		return sessions.data
+	return JSONResponse(status_code=400, content={"message": sessions.detail})	
+
+@router.delete("/session/{id}")
+async def give_session(id:int, auth_data: TokenData = Depends(token_dep)):
+	sessions = await delete_sessions(id, auth_data.user_id)
+	if sessions.status == TypeRespons.OK:
+		return "ok"
+	return JSONResponse(status_code=400, content={"message": sessions.detail})	

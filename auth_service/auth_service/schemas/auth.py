@@ -51,3 +51,10 @@ class TokenResponse(BaseModel):
 	token_type: TokenType = TokenType.BEARER_TOKEN
 	refresh_token: str
 	scope: List[str]
+
+class SessionSchema(BaseModel):
+	id :int
+	client_name: str
+	entry_time: datetime.datetime = datetime.datetime.now()
+	host: str
+	platform: str

@@ -4,13 +4,13 @@
 	height: 100%;
 	z-index: map-get($z-index, alert);
 }
-.dialog_item{
+.card{
 	background: var(--color-normal);
 	position: fixed;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	z-index: 8;
+	z-index: 4;
 	width: 450px;
 	min-height: 200px;
 	max-height: 500px;
@@ -24,11 +24,12 @@
 	@media (max-width: 600px){
 		width: 100%;
 	}
-	.dialog_title{
+	.header{
 		-webkit-font-smoothing: antialiased;
-    	font-size: 1.25rem;
+    	padding: 16px 16px 8px 16px;
+		font-size: 30px;
 		line-height: 2rem;
-		font-weight: 500;
+		font-weight: bold;
 		letter-spacing: .0125em;
 		text-decoration: inherit;
 		text-transform: inherit;
@@ -37,7 +38,6 @@
 		flex-shrink: 0;
 		box-sizing: border-box;
 		margin: 0;
-		padding: 0 24px 9px;
 		border-bottom: 1px solid transparent;
 		&::before {
 			display: inline-block;
@@ -84,6 +84,27 @@
 			text-transform: inherit;
 			align-items: center;
 			vertical-align: middle;
+			&.field-with-button{
+				height: 60px;
+				position: relative;
+				.field-btn{
+					height: 60px;
+					width: 60px;
+					line-height: 60px;
+					background: var(--color-normal);
+					text-align: center;
+					border-radius: 4px;
+					transition: .5s;
+					font-size: 24px;
+					font-weight: bold;
+					&:hover, &:active{
+						filter: brightness(120%);
+					}
+				}
+				.content-field{
+					width: calc(100% - 60px);
+				}
+			}
 			.radio-btn{
 				display: inline-block;
 				position: relative;
@@ -206,7 +227,7 @@
 			}
 		}
 	}
-	.dialog_btn_container{
+	.card_btn_container{
 		display: flex;
 		position: relative;
 		flex-shrink: 0;

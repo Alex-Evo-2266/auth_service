@@ -4,13 +4,20 @@ const storegeName:string = 'SHUserData';
 
 enum AuthTypesActions {
 	LOGIN = "LOGIN",
-	LOGOUT = "LOGOUT"
+	LOGOUT = "LOGOUT",
+	REFRESH = "REFRESH"
 }
 
 interface IPayload{
 	token: string
 	id: number
 	level: number
+	expires_at: string
+}
+
+interface IRefreshPayload{
+	token: string
+	expires_at: string
 }
 
 interface ILoginAction {
@@ -18,11 +25,16 @@ interface ILoginAction {
 	payload:IPayload
 }
 
+interface IRefreshAction {
+	type: AuthTypesActions.REFRESH
+	payload:IRefreshPayload
+}
+
 interface ILogoutAction {
 	type: AuthTypesActions.LOGOUT
 }
 
-type ActionType = ILoginAction | ILogoutAction
+type ActionType = ILoginAction | ILogoutAction | IRefreshAction
 
 const initialSate = ():IAuthState => {
 	let datauser:string | null = localStorage.getItem(storegeName)
@@ -33,7 +45,8 @@ const initialSate = ():IAuthState => {
 		token: data?.token || '',
 		id: data?.userId || null,
 		level: data?.userLevel || null,
-		isAuthenticated: !!data.token
+		isAuthenticated: !!data.token,
+		expires_at: (data?.expires_at)?new Date(data?.expires_at):new Date(),
 	}
 }
 
@@ -41,9 +54,14 @@ export const authReducer = (state:IAuthState = initialSate(), action:ActionType)
 	switch (action.type){
 		case "LOGIN":
 			localStorage.setItem(storegeName, JSON.stringify({
-				userId: action.payload.id, userLevel:action.payload.level, token:action.payload.token
+				userId: action.payload.id, userLevel:action.payload.level, token:action.payload.token, expires_at:action.payload.expires_at
 			}))
-			return {...state, token: action.payload.token, id: action.payload.id, level: action.payload.level, isAuthenticated: !!action.payload.token}
+			return {...state, token: action.payload.token, id: action.payload.id, level: action.payload.level, isAuthenticated: !!action.payload.token, expires_at: new Date(action.payload.expires_at)}
+		case "REFRESH":
+			localStorage.setItem(storegeName, JSON.stringify({
+				...state, token:action.payload.token, expires_at:action.payload.expires_at
+			}))
+			return {...state, token: action.payload.token, expires_at: new Date(action.payload.expires_at)}
 		case "LOGOUT":
 			localStorage.removeItem(storegeName)
 			fetch("/api/auth/logout", {method:"GET", body:null, headers:{"Authorization-Token": `Bearer ${state.token}`}});

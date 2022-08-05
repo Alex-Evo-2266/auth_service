@@ -5,22 +5,82 @@ import { Loading } from "../../components/loading";
 import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
-import { IAuthState } from "../../interfaces/authInterfaces";
+import { IAuthState, ISession } from "../../interfaces/authInterfaces";
 import { IUser } from "../../interfaces/profile";
 import { AlertType } from "../../store/reducers/alertReducer";
 import { CardTypeAction } from "../../store/reducers/cardReducer";
+import { DialogType, DialogTypeAction } from "../../store/reducers/dialogReducer";
 
 const CardSession:React.FC = () => {
+	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
+	const dispatch = useDispatch()
+	const { request, error, clearError, loading } = useHttp()
+	const alert = useAlert()
+	const [session, setSession] = useState<ISession[]>([])
+
+	useEffect(()=>{
+		if (error)
+			alert.show(AlertType.ERROR, "fetch error", error)
+    	return ()=>{
+     		clearError();
+    	}
+	},[error, clearError, alert])
+
+	const getSession = useCallback(async ()=>{
+		const data = await request("/api/auth/session", methods.GET, null, {Authorization: `Bearer ${dataAuth.token}`})
+		if (data && Array.isArray(data))
+			setSession(
+				data.map((item)=>({
+					id: item.id,
+					client_name: item.client_name,
+					entry_time: new Date(item.entry_time),
+					host: item.host,
+					platform: item.platform
+				}))
+			)
+	},[request, dataAuth.token])
+
+	useEffect(()=>{
+		getSession()
+	},[getSession])
+
+	const exit = ()=>{
+		dispatch({type:CardTypeAction.CARD_HIDE})
+	}
+
+	const del = (id:number)=>{
+		dispatch({type: DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"delete?", text:"close session?", callback:async ()=>{
+			await request(`/api/auth/session/${id}`, methods.DELETE, null, {Authorization: `Bearer ${dataAuth.token}`})
+			getSession()
+		}}})
+		console.log(id)
+	}
+
 	return (
-		<div className="dialog_item">
-			<h2 className="dialog_title">dv</h2>
+		<div className="card">
+			<h2 className="header">dv</h2>
 			<div className="content content-scrollable">
-				<div className="container-list">
-				</div>
+					{
+						(session.length != 0)?
+						session.map((item, index)=>{
+							return (
+								<div key={index} className="field field-with-button">
+									<div className="content-field">
+									service: {item.client_name}; pltform: {item.platform}; date: {item.entry_time.toString()}
+									</div>
+									<div onClick={()=>del(item.id)} className="field-btn" style={{color:"#dd0000"}}>x</div>
+								</div>
+							)
+						}):
+						<div className="field field-with-button">
+							<div className="content-field">
+								no items
+							</div>
+						</div>
+					}
 			</div>
-			<div className="dialog_btn_container">
-				<button className="btn">cancel</button>
-				<button className="btn">ok</button>
+			<div className="card_btn_container">
+				<button className="btn" onClick={exit}>exit</button>
 			</div>
 		</div>
 	)

@@ -12,7 +12,7 @@ export const Card:React.FC = () =>{
 	return null
 	
 	return(
-		<div className="dialog_wrapper">
+		<div className="dialog_wrapper" style={{zIndex: 998}}>
 			<div className="backdrop" onClick={()=>dispatch({type:CardTypeAction.CARD_HIDE})}></div>
 			{card.content}
 		</div>
