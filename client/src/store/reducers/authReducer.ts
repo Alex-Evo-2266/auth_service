@@ -1,4 +1,4 @@
-import { IAuthState } from "../../interfaces/authInterfaces"
+import { AuthLevelActions, IAuthState } from "../../interfaces/authInterfaces"
 
 const storegeName:string = 'SHUserData';
 
@@ -11,7 +11,7 @@ enum AuthTypesActions {
 interface IPayload{
 	token: string
 	id: number
-	level: number
+	level: AuthLevelActions
 	expires_at: string
 }
 
@@ -44,7 +44,7 @@ const initialSate = ():IAuthState => {
 	return{
 		token: data?.token || '',
 		id: data?.userId || null,
-		level: data?.userLevel || null,
+		level: data?.userLevel || AuthLevelActions.NONE,
 		isAuthenticated: !!data.token,
 		expires_at: (data?.expires_at)?new Date(data?.expires_at):new Date(),
 	}
@@ -65,7 +65,7 @@ export const authReducer = (state:IAuthState = initialSate(), action:ActionType)
 		case "LOGOUT":
 			localStorage.removeItem(storegeName)
 			fetch("/api/auth/logout", {method:"GET", body:null, headers:{"Authorization-Token": `Bearer ${state.token}`}});
-			return {...state, token: '', id: null, level: null, isAuthenticated: false}
+			return {...state, token: '', id: null, level: AuthLevelActions.NONE, isAuthenticated: false}
 		default:
 			return state
 	}

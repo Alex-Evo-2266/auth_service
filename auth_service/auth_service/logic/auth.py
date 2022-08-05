@@ -8,7 +8,7 @@ from typing import List, Optional
 
 from jwt import ExpiredSignatureError
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from auth_service.models import BearerToken, User, Client
 from auth_service.schemas.auth import Login, ResponseLogin, Token, Tokens, SessionSchema
@@ -27,7 +27,7 @@ async def login(data: Login)->FunctionRespons:
 			encoded_jwt:Tokens = await create_tokens(u.id)
 			result = ResponseLogin(token=encoded_jwt.access, userId=u.id, userLevel=u.level, expires_at=encoded_jwt.expires_at)
 			logger.info(f"login user: {u.name}, id: {u.id}")
-			await BearerToken.objects.create(user=u, scopes="all", access_token=encoded_jwt.access, refresh_token=encoded_jwt.refresh, expires_at=encoded_jwt.expires_at)
+			await BearerToken.objects.create(entry_time=datetime.now(settings.TIMEZONE), user=u, scopes="all", access_token=encoded_jwt.access, refresh_token=encoded_jwt.refresh, expires_at=encoded_jwt.expires_at)
 			return FunctionRespons(status = TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
 		return FunctionRespons(status = TypeRespons.ERROR, detail='invalid data')
 	except Exception as e:
@@ -49,8 +49,8 @@ async def logout(user_id:int, refrash:str)->FunctionRespons:
 async def create_tokens(user_id:int)->Tokens:
 	access_toket_expire = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 	refresh_toket_expire = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
-	access_toket_expires_at = expire = datetime.utcnow() + access_toket_expire
-	refresh_toket_expires_at = expire = datetime.utcnow() + refresh_toket_expire
+	access_toket_expires_at = datetime.now(settings.TIMEZONE) + access_toket_expire
+	refresh_toket_expires_at = datetime.now(settings.TIMEZONE) + refresh_toket_expire
 	return Tokens(
 		access = await create_token(
 			data = {'user_id':user_id,},
@@ -67,7 +67,7 @@ async def create_tokens(user_id:int)->Tokens:
 		expires_at = access_toket_expires_at
 	)
 
-async def create_token(data: dict, expires_at: datetime = datetime.utcnow() + timedelta(minutes=15), type: str = "access", secret: str = settings.SECRET_JWT_KEY):
+async def create_token(data: dict, expires_at: datetime = datetime.now(settings.TIMEZONE) + timedelta(minutes=15), type: str = "access", secret: str = settings.SECRET_JWT_KEY):
 	to_encode = data.copy()
 	to_encode.update({'exp': expires_at, 'sub': type})
 	encoded_jwt = jwt.encode(to_encode, secret, algorithm = settings.ALGORITHM)
@@ -82,7 +82,7 @@ async def auth(Authorization)->FunctionRespons:
 		if not('exp' in data and 'user_id' in data and data['sub'] == "access"):
 			logger.worning(f"no data in jwt")
 			return FunctionRespons(status = TypeRespons.ERROR, detail="no data in jwt")
-		if (datetime.utcnow() > datetime.fromtimestamp(data['exp'])):
+		if (datetime.now(settings.TIMEZONE) > datetime.fromtimestamp(data['exp'], settings.TIMEZONE)):
 			logger.debug(f"outdated jwt")
 			return FunctionRespons(status = TypeRespons.INVALID, detail="outdated_jwt")
 		user = await User.objects.get(id=data['user_id'])
@@ -99,7 +99,7 @@ async def refresh_token(token: str)->FunctionRespons:
 		if not('exp' in data and 'user_id' in data and data['sub'] == "refresh"):
 			logger.warning(f"no data in jwt")
 			return FunctionRespons(status=TypeRespons.ERROR, detail="no data in jwt")
-		if (datetime.utcnow() > datetime.fromtimestamp(data['exp'])):
+		if (datetime.now(settings.TIMEZONE) > datetime.fromtimestamp(data['exp'], settings.TIMEZONE)):
 			logger.debug(f"outdated jwt")
 			return FunctionRespons(status=TypeRespons.INVALID, detail="outdated jwt")
 		u = await User.objects.get_or_none(id=data["user_id"])
@@ -129,12 +129,8 @@ async def	bearerTokenToSession(data:List[BearerToken])->Optional[List[SessionSch
 	arr = []
 	for item in data:
 		client_name = "auth"
-		print("a")
 		if item.client:
-			print(item)
-			print(item.client.id)
 			client = await Client.objects.get_or_none(id=item.client.id)
-			print(client)
 			if not client:
 				raise Exception('session tot found')
 			client_name = client.title
@@ -144,7 +140,7 @@ async def	bearerTokenToSession(data:List[BearerToken])->Optional[List[SessionSch
 			host = item.host
 		if item.platform:
 			platform = item.platform
-		arr.append(SessionSchema(id=item.id, client_name=client_name, host=host, platform=platform))
+		arr.append(SessionSchema(id=item.id, client_name=client_name, host=host, platform=platform, entry_time=item.entry_time))
 	return arr
 
 async def get_sessions(user_id:int)->FunctionRespons:

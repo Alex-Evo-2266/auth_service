@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 import os, sys
 
@@ -41,3 +42,5 @@ IMAGE_URL = os.path.join(MEDIA_URL, 'image')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 IMAGE_DIR = os.path.join(MEDIA_ROOT, 'image')
 HOST = "localhost:5000"
+
+TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))

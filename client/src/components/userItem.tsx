@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { useAlert } from '../hooks/alert.hook'
 import { methods, useHttp } from '../hooks/http.hook'
 import { useTypeSelector } from '../hooks/useTypeSelector'
-import { IAuthState } from '../interfaces/authInterfaces'
+import { AuthLevelActions, IAuthState } from '../interfaces/authInterfaces'
 import { IUser } from '../interfaces/profile'
 import { AlertType } from '../store/reducers/alertReducer'
 import { DialogType, DialogTypeAction } from '../store/reducers/dialogReducer'
@@ -38,14 +38,14 @@ export const UserItem = (prop:IProp)=>{
 				<h3>{prop.user.name} {prop.user.surname}</h3>
 				<div className="control">
 				{
-					(dataAuth.level===3&&dataAuth.id!==prop.user.id)?
+					(dataAuth.level===AuthLevelActions.ADMIN&&dataAuth.id!==prop.user.id)?
 					<button className="editBtn" onClick={()=>{}}>Edit</button>:
 					null
 				}
 				{
 					(dataAuth.id===prop.user.id)?
 					<Link className="editBtn" to="/profile/edit">Edit</Link>:
-					(dataAuth.level===3)?
+					(dataAuth.level===AuthLevelActions.ADMIN)?
 					<button className="deletBtn" onClick={()=>{
 						dispatch({type: DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.ALERT, title:"delete?", text:"delete user?", callback:async ()=>{
 							await request(`/api/users/${prop.user.id}`, methods.DELETE, null, {Authorization: `Bearer ${dataAuth.token}`})

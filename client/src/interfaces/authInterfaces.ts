@@ -1,7 +1,14 @@
+export enum AuthLevelActions {
+	ADMIN = 3,
+	MID = 2,
+	USER = 1,
+	NONE = 0
+}
+
 export interface IAuthState{
   token: string,
   id: number | null,
-  level: null | number,
+  level: AuthLevelActions,
   isAuthenticated: boolean
   expires_at: Date
 }

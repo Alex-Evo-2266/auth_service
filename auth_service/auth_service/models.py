@@ -65,7 +65,7 @@ class BearerToken(ormar.Model):
 	expires_at: datetime.datetime = ormar.DateTime()
 	host: str = ormar.String(max_length=100, default="")
 	platform: str = ormar.String(max_length=100, default="")
-	# entry_time: datetime.datetime = ormar.DateTime()
+	entry_time: datetime.datetime = ormar.DateTime()
 
 class AuthCode(ormar.Model):
 	class Meta(BaseMeta):
