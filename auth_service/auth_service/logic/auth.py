@@ -10,7 +10,7 @@ from jwt import ExpiredSignatureError
 
 from datetime import datetime, timedelta
 
-from auth_service.models import BearerToken, User
+from auth_service.models import BearerToken, User, Client
 from auth_service.schemas.auth import Login, ResponseLogin, Token, Tokens, SessionSchema
 from auth_service import settings
 
@@ -125,12 +125,19 @@ async def refresh_token(token: str)->FunctionRespons:
 	except Exception as e:
 		return FunctionRespons(status=TypeRespons.ERROR, detail=str(e))
 
-def	bearerTokenToSession(data:List[BearerToken])->Optional[List[SessionSchema]]:
+async def	bearerTokenToSession(data:List[BearerToken])->Optional[List[SessionSchema]]:
 	arr = []
 	for item in data:
 		client_name = "auth"
+		print("a")
 		if item.client:
-			client_name = item.client.title
+			print(item)
+			print(item.client.id)
+			client = await Client.objects.get_or_none(id=item.client.id)
+			print(client)
+			if not client:
+				raise Exception('session tot found')
+			client_name = client.title
 		host = ""
 		platform = ""
 		if item.host:
@@ -147,7 +154,7 @@ async def get_sessions(user_id:int)->FunctionRespons:
 			logger.error(f"user not found")
 			return FunctionRespons(status = TypeRespons.ERROR, detail='user not found')
 		sessions = await BearerToken.objects.all(user=user)
-		session_array = bearerTokenToSession(sessions)
+		session_array = await bearerTokenToSession(sessions)
 		return FunctionRespons(status=TypeRespons.OK, data=session_array)
 	except Exception as e:
 		return FunctionRespons(status=TypeRespons.ERROR, detail=str(e))

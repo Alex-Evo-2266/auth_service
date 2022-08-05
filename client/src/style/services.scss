@@ -33,7 +33,9 @@
 	color: var(--text-normal);
 	padding: 10px 10px 0 10px;
 	box-shadow: 0 0 8px #000;
-	margin-top: 50%;
+	position: absolute;
+	width: calc(100% - 45px);
+	top: 50%;
 	transform: translateY(calc(-50% - 20px));
 	h2{
 		padding: 16px 16px 8px;
