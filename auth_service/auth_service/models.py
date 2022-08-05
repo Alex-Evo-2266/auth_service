@@ -52,9 +52,11 @@ class BearerToken(ormar.Model):
     client: Optional[Client] = ormar.ForeignKey(Client, related_name="ber_toker", nullable=True)
     user: Optional[User] = ormar.ForeignKey(User, related_name="ber_toker")
     scopes: str = ormar.Text()
-    access_token: str = ormar.String(max_length=500)
-    refresh_token: str = ormar.String(max_length=500)
+    access_token: str = ormar.Text(max_length=500)
+    refresh_token: str = ormar.Text(max_length=500)
     expires_at: datetime.datetime = ormar.DateTime()
+    host: str = ormar.String(max_length=100, default="")
+    platform: str = ormar.String(max_length=100, default="")
 
 class AuthCode(ormar.Model):
     class Meta(BaseMeta):
@@ -98,5 +100,3 @@ class InterfaceColor(ormar.Model):
     color1: str = ormar.String(max_length=50)
     color2: str = ormar.String(max_length=50)
     active: str = ormar.String(max_length=50)
-
-
