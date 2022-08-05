@@ -3,6 +3,12 @@ from pydantic import BaseModel
 from typing import List
 from enum import Enum
 
+class UserLevel(int, Enum):
+	ADMIN = 3,
+	MID = 2,
+	USER = 1,
+	NONE = 0
+
 class TypeGrant(str, Enum):
 	CODE = "authorization_code"
 

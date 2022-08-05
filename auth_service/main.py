@@ -9,6 +9,7 @@ from auth_service.api.image import router as router_image
 from auth_service.api.colors import router as router_color
 from auth_service.api.user import router as router_user
 from auth_service.api.apps import router as router_app
+from auth_service.api.config import router as router_config
 from auth_service.api.background import router as router_background
 from auth_service.settings import MEDIA_ROOT, MEDIA_URL, DEBUG, ORIGINS
 from auth_service.admin_create import initAdmin
@@ -62,3 +63,4 @@ app.include_router(router_user)
 app.include_router(router_app)
 app.include_router(router_color)
 app.include_router(router_background)
+app.include_router(router_config)

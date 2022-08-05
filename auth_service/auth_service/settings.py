@@ -2,17 +2,18 @@ import datetime
 from pathlib import Path
 import os, sys
 
-try:
-    from .settings_local import *
-except Exception as e:
-    from .settings_prod import *
+from auth_service.utils.settings import Settings
 
+try:
+	from .settings_local import *
+except Exception as e:
+	from .settings_prod import *
 
 DB_URL = "".join(["mysql+pymysql://",
-    MYSQL_USER,":",
-    MYSQL_PASSWORD,"@",
-    MYSQL_HOST,":",MYSQL_PORT,"/",
-    MYSQL_DATABASE])
+	MYSQL_USER,":",
+	MYSQL_PASSWORD,"@",
+	MYSQL_HOST,":",MYSQL_PORT,"/",
+	MYSQL_DATABASE])
 print("bd: ",DB_URL)
 
 
@@ -27,8 +28,8 @@ SECRET_REFRESH_JWT_KEY = "sz345657rytyk5yeytw433frthjyuvligukytrtyug5hth56"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SERVER_CONFIG = os.path.join(BASE_DIR, "files","server-config.yml")
-STYLES_DIR = os.path.join(BASE_DIR, "files","styles")
+CONFIG_FILES_DIR = os.path.join(BASE_DIR, "files")
+SERVER_CONFIG = os.path.join(CONFIG_FILES_DIR, "server-config.yml")
 
 TIME_UPPDATA = 6
 LENGTHPASS = 10
@@ -44,3 +45,20 @@ IMAGE_DIR = os.path.join(MEDIA_ROOT, 'image')
 HOST = "localhost:5000"
 
 TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
+
+data = {
+	"email_login":"",
+	"email_password":""
+}
+
+if not os.path.exists(MEDIA_ROOT):
+	os.mkdir(MEDIA_ROOT)
+if not os.path.exists(IMAGE_DIR):
+	os.mkdir(IMAGE_DIR)
+if not os.path.exists(CONFIG_FILES_DIR):
+	os.mkdir(CONFIG_FILES_DIR)
+if not os.path.exists(SERVER_CONFIG):
+	file = open(SERVER_CONFIG, "w+")
+	file.close()
+
+config = Settings(SERVER_CONFIG)
