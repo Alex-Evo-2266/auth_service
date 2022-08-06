@@ -18,7 +18,7 @@ from auth_service.logic.mail import send_email
 
 logger = logging.getLogger(__name__)
 
-async def login(data: Login)->FunctionRespons:
+async def login(data: Login, platform:Optional[str] = "", host:str = "")->FunctionRespons:
 	try:
 		logger.debug(f"login input data: {data.dict()}")
 		u = await User.objects.get_or_none(name=data.name)
@@ -29,7 +29,7 @@ async def login(data: Login)->FunctionRespons:
 			encoded_jwt:Tokens = await create_tokens(u.id)
 			result = ResponseLogin(token=encoded_jwt.access, userId=u.id, userLevel=u.level, expires_at=encoded_jwt.expires_at)
 			logger.info(f"login user: {u.name}, id: {u.id}")
-			await BearerToken.objects.create(entry_time=datetime.now(settings.TIMEZONE), user=u, scopes="all", access_token=encoded_jwt.access, refresh_token=encoded_jwt.refresh, expires_at=encoded_jwt.expires_at)
+			await BearerToken.objects.create(host=host, platform=platform, entry_time=datetime.now(settings.TIMEZONE), user=u, scopes="all", access_token=encoded_jwt.access, refresh_token=encoded_jwt.refresh, expires_at=encoded_jwt.expires_at)
 			await send_email("Login", u.email, "login detected")
 			return FunctionRespons(status = TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
 		return FunctionRespons(status = TypeRespons.ERROR, detail='invalid data')

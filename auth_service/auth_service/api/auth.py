@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, Query, Header
 from fastapi.responses import JSONResponse
-from typing import Optional, List
+from typing import Optional, List, Union
 from auth_service.depends.auth import token_dep
 from auth_service.logic.apps import auth_code, get_token
 from auth_service.schemas.base import TokenData, TypeRespons
@@ -16,9 +16,9 @@ router = APIRouter(
 	)
 
 @router.post("/login", response_model=ResponseLogin)
-async def login(response: Response, data: Login):
+async def login(host:Optional[str] = Header(None), sec_ch_ua_platform: Union[str, None] = Header(default=None), response:Response = Response("ok", 200), data: Login = Login(name="",password="")):
 	try:
-		res = await Authorization(data)
+		res = await Authorization(data, sec_ch_ua_platform, host)
 		if(res.status == "ok"):
 			response.set_cookie(key="refresh_toket", value=res.data["refresh"], httponly=True)
 			return res.data["response"]
@@ -60,10 +60,9 @@ async def authorize(response_type:TypeResponse  = Query(TypeResponse.CODE), clie
 	return JSONResponse(status_code=400, content={"message": res.detail})
 
 @router.get("/token", response_model=TokenResponse)
-async def give_token(Host:Optional[str] = Header(None), grant_type:TypeGrant = Query(TypeGrant.CODE), code:str = Query(...), redirect_uri:str = Query(...), client_id:str = Query(...), client_secret:str = Query(...)):
-	print(Host)
+async def give_token(host:Optional[str] = Header(None), sec_ch_ua_platform: Union[str, None] = Header(default=None), grant_type:TypeGrant = Query(TypeGrant.CODE), code:str = Query(...), redirect_uri:str = Query(...), client_id:str = Query(...), client_secret:str = Query(...)):
 	if (grant_type == TypeGrant.CODE):
-		tokens = await get_token(code, client_id, client_secret)
+		tokens = await get_token(code, client_id, client_secret, sec_ch_ua_platform, host)
 		if tokens.status == TypeRespons.OK:
 			return tokens.data
 		return JSONResponse(status_code=400, content={"message": tokens.detail})	

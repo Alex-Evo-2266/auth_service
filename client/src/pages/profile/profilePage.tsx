@@ -106,7 +106,7 @@ const CardSession:React.FC = () => {
 
 	return (
 		<div className="card">
-			<h2 className="header">dv</h2>
+			<h2 className="header">Sessions</h2>
 			<div className="content content-scrollable">
 					{
 						(session.length != 0)?
@@ -114,7 +114,7 @@ const CardSession:React.FC = () => {
 							return (
 								<div key={index} className="field field-with-button">
 									<div className="content-field">
-									service: {item.client_name}; pltform: {item.platform}; date: {item.entry_time.toString()}
+									service: {item.client_name}; {(item.platform)?`pltform: ${item.platform}`:""} ; date: {item.entry_time.toString()}
 									</div>
 									<div onClick={()=>del(item.id)} className="field-btn" style={{color:"#dd0000"}}>x</div>
 								</div>

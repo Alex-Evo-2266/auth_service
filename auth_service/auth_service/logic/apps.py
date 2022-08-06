@@ -113,7 +113,7 @@ async def auth_code(client_id:str, redirect_uri:str, scope:List[str], user_id:in
 	return FunctionRespons(status=TypeRespons.OK, data=code)
 
 
-async def get_token(code: str, client_id: str, client_secret:str)->FunctionRespons:
+async def get_token(code: str, client_id: str, client_secret:str, platform:str = "", host:str = "")->FunctionRespons:
 	client = await Client.objects.get_or_none(client_id=client_id)
 	if not client:
 		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
@@ -127,7 +127,7 @@ async def get_token(code: str, client_id: str, client_secret:str)->FunctionRespo
 		return FunctionRespons(status=TypeRespons.ERROR, detail="authorization code is outdated.")
 	tokens = await create_tokens(code_obj.user.id)
 	arr = code_obj.scopes.split(";")
-	await BearerToken.objects.create(user=code_obj.user, client=client, scopes=code_obj.scopes, access_token=tokens.access, refresh_token=tokens.refresh, expires_at=tokens.expires_at)
+	await BearerToken.objects.create(host=host, platform=platform, user=code_obj.user, client=client, scopes=code_obj.scopes, access_token=tokens.access, refresh_token=tokens.refresh, expires_at=tokens.expires_at)
 	await code_obj.delete()
 	data = TokenResponse(access_token=tokens.access, expires_at=tokens.expires_at, token_type=TokenType.BEARER_TOKEN, refresh_token=tokens.refresh, scope=arr)
 	return FunctionRespons(status=TypeRespons.OK, data=data)

@@ -20,7 +20,7 @@ print("bd: ",DB_URL)
 ORIGINS = ["localhost",'127.0.0.1','192.168.0.9','192.168.0.4']
 
 ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 1
+ACCESS_TOKEN_EXPIRE_MINUTES = 15
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 2
 SECRET_JWT_KEY = "dxkhbg5hth56"
 SECRET_AUTH_CODE_KEY = "dxkhbgdgfhjkljkh5hth56"
@@ -50,6 +50,8 @@ data = {
 	"email_login":"",
 	"email_password":""
 }
+
+# init dir
 
 if not os.path.exists(MEDIA_ROOT):
 	os.mkdir(MEDIA_ROOT)

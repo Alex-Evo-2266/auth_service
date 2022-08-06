@@ -4,7 +4,7 @@ import datetime
 from typing import Type, TypeVar, List, Optional, Any
 
 from auth_service.schemas.image import TypeBackground
-from .schemas.auth import TypeResponse, TypeGrant
+from .schemas.auth import TypeResponse, TypeGrant, UserLevel
 from pydantic.color import Color
 
 # class Role(ormar.Model):
@@ -25,7 +25,7 @@ class User(ormar.Model):
 	surname: str = ormar.String(max_length=200, nullable=True)
 	password: str = ormar.String(max_length=200, nullable=False)
 	email: str = ormar.String(max_length=200, nullable=False)
-	level: int = ormar.Integer(default=1)
+	level: UserLevel = ormar.Integer(default=1)
 	profile_image: int = ormar.Integer(default=-1)
 	color: int = ormar.Integer(default=-1)
 	nightColor: int = ormar.Integer(default=-1)
