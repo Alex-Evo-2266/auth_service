@@ -25,8 +25,10 @@ def strGenerator(chars:str, count:int)->FunctionRespons:
     return FunctionRespons(status=TypeRespons.OK, data=password)
 
 async def add_apps(data:CreateApps, user_id: int)->FunctionRespons:
+	logger.debug(f"add app {data.dict()} user_id={user_id}")
 	user: User = await User.objects.get_or_none(id=user_id)
 	if not user:
+		logger.warning(f"user not found user_id={user_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="error")
 	datapass = strGenerator('+-/*!&$#?=@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', LENGTH_PASS_APP).data
 	dataid = ""
@@ -38,14 +40,18 @@ async def add_apps(data:CreateApps, user_id: int)->FunctionRespons:
 	client = await Client.objects.create(client_id=dataid, title=data.title, user=user, grant_type=TypeGrant.CODE, response_type=TypeResponse.CODE, scopes="", default_scopes="", redirect_uris="", default_redirect_uri=data.default_redirect_uri, client_secret=datapass)
 	clientbuff = client.dict()
 	clientbuff = without_keys(clientbuff, {"user"})
+	logger.info("added app")
 	return FunctionRespons(status=TypeRespons.OK, data=AppFullData(**clientbuff))
 
 async def edit_apps(data: AppData, client_id: str, user_id: int):
+	logger.debug(f"edit app {data.dict()} client_id={client_id} user_id={user_id}")
 	user: User = await User.objects.get_or_none(id=user_id)
 	if not user:
+		logger.warning(f"user not found user_id={user_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="error")
 	client = await Client.objects.get_or_none(user=user, client_id=client_id)
 	if not client:
+		logger.warning(f"client not found client_id={client_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
 	if data.title:
 		client.title = data.title
@@ -62,11 +68,13 @@ async def edit_apps(data: AppData, client_id: str, user_id: int):
 	if data.grant_type:
 		client.grant_type = data.grant_type
 	await client.update(_columns=["title", "default_redirect_uri", "redirect_uris", "default_scopes", "scopes", "response_type", "grant_type"])
+	logger.info("edit app client_id={client_id}")
 	return FunctionRespons(status=TypeRespons.OK, data="ok")
 
 async def give_apps(user_id: int)->FunctionRespons:
 	user: User = await User.objects.get_or_none(id=user_id)
 	if not user:
+		logger.warning(f"user not found user_id={user_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="error")
 	clients = await Client.objects.all(user=user)
 	arr:List[AppData] = []
@@ -82,24 +90,30 @@ async def give_apps(user_id: int)->FunctionRespons:
 			redirect_uris=item.redirect_uris,
 			default_redirect_uri=item.default_redirect_uri
 			))
+	logger.info("get app")
 	return FunctionRespons(status=TypeRespons.OK, data=arr)
 
 async def del_apps(client_id:str, user_id: int)->FunctionRespons:
 	user: User = await User.objects.get_or_none(id=user_id)
 	if not user:
+		logger.warning(f"user not found user_id={user_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
 	client = await Client.objects.get_or_none(user=user, client_id=client_id)
 	if not client:
+		logger.warning(f"client not found client_id={client_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
 	await client.delete()
+	logger.info("delete app client_id={client_id}")
 	return FunctionRespons(status=TypeRespons.OK, data="ok")
 
 async def auth_code(client_id:str, redirect_uri:str, scope:List[str], user_id:int)->FunctionRespons:
 	user: User = await User.objects.get_or_none(id=user_id)
 	if not user:
+		logger.warning(f"user not found user_id={user_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
 	client = await Client.objects.get_or_none(client_id=client_id)
 	if not client:
+		logger.warning(f"client not found client_id={client_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
 	now = datetime.now()
 	expires_at = datetime.utcnow() + timedelta(minutes=15)
@@ -110,14 +124,17 @@ async def auth_code(client_id:str, redirect_uri:str, scope:List[str], user_id:in
 		codes = await AuthCode.objects.get_or_none(code=code)
 		print(codes)
 	await AuthCode.objects.create(client=client, user=user, scopes=";".join(scope), redirect_uri=redirect_uri, expires_at=expires_at, code=code, challenge_method="", challenge="")
+	logger.info("auth code client_id={client_id}")
 	return FunctionRespons(status=TypeRespons.OK, data=code)
 
 
 async def get_token(code: str, client_id: str, client_secret:str, platform:str = "", host:str = "")->FunctionRespons:
 	client = await Client.objects.get_or_none(client_id=client_id)
 	if not client:
+		logger.warning(f"client not found client_id={client_id}")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
 	if client.client_secret != client_secret:
+		logger.info(f"client_secret invalid")
 		return FunctionRespons(status=TypeRespons.ERROR, detail="invalid secret")
 	code_obj = await AuthCode.objects.get_or_none(code=code, client=client)
 	if not code_obj:
@@ -130,6 +147,7 @@ async def get_token(code: str, client_id: str, client_secret:str, platform:str =
 	await BearerToken.objects.create(host=host, platform=platform, user=code_obj.user, client=client, scopes=code_obj.scopes, access_token=tokens.access, refresh_token=tokens.refresh, expires_at=tokens.expires_at)
 	await code_obj.delete()
 	data = TokenResponse(access_token=tokens.access, expires_at=tokens.expires_at, token_type=TokenType.BEARER_TOKEN, refresh_token=tokens.refresh, scope=arr)
+	logger.info("get token client_id={client_id}")
 	return FunctionRespons(status=TypeRespons.OK, data=data)
 
 
