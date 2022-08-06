@@ -4,6 +4,7 @@ import { useAlert } from '../hooks/alert.hook';
 // import {Link} from 'react-router-dom'
 import {methods, useHttp} from '../hooks/http.hook'
 import { AlertType } from '../store/reducers/alertReducer';
+import { DialogType, DialogTypeAction } from '../store/reducers/dialogReducer';
 
 interface ILogin{
 	name: string,
@@ -68,7 +69,9 @@ export const AuthPage = function (){
 	}
 
 	const newpass = ()=>{
-		console.log("not functional");
+		dispatch({type:DialogTypeAction.DIALOG_SHOW, payload:{type:DialogType.TEXT,text: "generate new password", title:"action", callback:async(data:any)=>{
+				await request(`/api/users/gen_new_pass`, methods.POST, {name: data})
+		}}})
 	}
 
 	return(

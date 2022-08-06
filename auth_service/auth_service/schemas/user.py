@@ -30,8 +30,8 @@ class UserEditLevelSchema(BaseModel):
     level: int
 
 class UserEditPasswordSchema(BaseModel):
-    Old: str
-    New: str
+    old_password: str
+    new_password: str
     
 class TypeTheme(str, Enum):
     LIGHT = "LIGHT"

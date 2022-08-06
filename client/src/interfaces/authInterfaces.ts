@@ -20,3 +20,8 @@ export interface ISession{
 	host: string
 	platform: string
   }
+
+export interface INewPass{
+	old_password: string
+	new_password: string
+}

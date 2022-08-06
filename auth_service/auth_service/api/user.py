@@ -2,11 +2,11 @@ import json
 from auth_service.depends.auth import token_dep
 from auth_service.logic.colors import set_color
 from auth_service.logic.image import set_profile_image
-from auth_service.logic.user import addUser, deleteUser, editUser, getUser, getUsers
+from auth_service.logic.user import addUser, deleteUser, editUser, getUser, getUsers, new_pass, new_gen_pass
 from auth_service.logic.user_config import get_user_config, set_config
 from auth_service.schemas.base import TokenData, TypeRespons
 from auth_service.schemas.auth import UserLevel
-from auth_service.schemas.user import TypeTheme, UserEditSchema, UserForm, UserSchema
+from auth_service.schemas.user import TypeTheme, UserEditSchema, UserForm, UserSchema, UserEditPasswordSchema, UserNameSchema
 from auth_service.logic.auth import auth
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Cookie
@@ -126,6 +126,20 @@ async def setprofileimage(imageId: int, auth_data: TokenData = Depends(token_dep
 @router.patch("/config")
 async def setconfig(data: UserConfigPatch, auth_data: TokenData = Depends(token_dep)):
 	res = await set_config(data, auth_data.user_id)
+	if res.status == TypeRespons.OK:
+		return "ok"
+	return JSONResponse(status_code=400, content={"message": res.detail})
+
+@router.post("/newpass")
+async def newpass(data: UserEditPasswordSchema, auth_data: TokenData = Depends(token_dep)):
+	res = await new_pass(data, auth_data.user_id)
+	if res.status == TypeRespons.OK:
+		return "ok"
+	return JSONResponse(status_code=400, content={"message": res.detail})
+
+@router.post("/gen_new_pass")
+async def newpass(data: UserNameSchema):
+	res = await new_gen_pass(data)
 	if res.status == TypeRespons.OK:
 		return "ok"
 	return JSONResponse(status_code=400, content={"message": res.detail})

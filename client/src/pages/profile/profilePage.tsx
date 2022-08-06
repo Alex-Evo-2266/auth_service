@@ -5,11 +5,59 @@ import { Loading } from "../../components/loading";
 import { useAlert } from "../../hooks/alert.hook";
 import { methods, useHttp } from "../../hooks/http.hook";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
-import { IAuthState, ISession } from "../../interfaces/authInterfaces";
+import { IAuthState, ISession, INewPass } from "../../interfaces/authInterfaces";
 import { IUser } from "../../interfaces/profile";
 import { AlertType } from "../../store/reducers/alertReducer";
 import { CardTypeAction } from "../../store/reducers/cardReducer";
 import { DialogType, DialogTypeAction } from "../../store/reducers/dialogReducer";
+
+const CardEditPass:React.FC = () =>{
+	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
+	const dispatch = useDispatch()
+	const { request, error, clearError, loading } = useHttp()
+	const alert = useAlert()
+	const [password, setPassword] = useState<INewPass>({
+		old_password:"",
+		new_password:""
+	})
+
+	const changeRegHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setPassword({ ...password, [event.target.name]: event.target.value })
+	}
+
+	const exit = ()=>{
+		dispatch({type:CardTypeAction.CARD_HIDE})
+	}
+
+	const new_password = async()=>{
+		await request(`/api/users/newpass`, methods.POST, password, {Authorization: `Bearer ${dataAuth.token}`})
+		exit()
+	}
+
+	return (
+		<div className="card">
+			<h2 className="header">Edit password</h2>
+			<div className="content ">
+					<div className="input-container">
+						<div className="input-data" style={{marginBottom: "10px"}}>
+							<input required type="password" name="old_password" value={password.old_password} onChange={changeRegHandler}/>
+							<label>old password</label>
+						</div>
+					</div>
+					<div className="input-container">
+						<div className="input-data">
+							<input required type="password" name="new_password" value={password.new_password} onChange={changeRegHandler}/>
+							<label>new password</label>
+						</div>
+					</div>
+				</div>
+			<div className="card_btn_container">
+				<button className="btn" onClick={exit}>exit</button>
+				<button className="btn" onClick={new_password}>send</button>
+			</div>
+		</div>
+	)
+}
 
 const CardSession:React.FC = () => {
 	const dataAuth:IAuthState = useTypeSelector(state=>state.auth)
@@ -129,6 +177,10 @@ export const ProfilePage:React.FC = () =>{
 		dispatch({type:CardTypeAction.CARD_SHOW, payload:{content:<CardSession/>}})
 	}
 
+	const editpass = ()=>{
+		dispatch({type:CardTypeAction.CARD_SHOW, payload:{content:<CardEditPass/>}})
+	}
+
 	if (loading)
 		return <Loading/>
 	
@@ -153,6 +205,7 @@ export const ProfilePage:React.FC = () =>{
 			<div className="separation"></div>
 			<Link to="/profile/edit" className="btn">edit</Link>
 			<button onClick={d} className="btn">sessions</button>
+			<button onClick={editpass} className="btn">edit password</button>
 		</>
 	)
 }

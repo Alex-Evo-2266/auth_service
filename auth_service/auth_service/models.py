@@ -17,7 +17,8 @@ from pydantic.color import Color
 
 class User(ormar.Model):
 	class Meta(BaseMeta):
-		pass
+		constraints = [ormar.UniqueColumns("name")]
+
 
 	id: int = ormar.Integer(primary_key=True)
 	name: str = ormar.String(max_length=200, nullable=False)
