@@ -14,6 +14,8 @@ from auth_service.models import BearerToken, User, Client
 from auth_service.schemas.auth import Login, ResponseLogin, Token, Tokens, SessionSchema
 from auth_service import settings
 
+from auth_service.logic.mail import send_email
+
 logger = logging.getLogger(__name__)
 
 async def login(data: Login)->FunctionRespons:
@@ -28,6 +30,7 @@ async def login(data: Login)->FunctionRespons:
 			result = ResponseLogin(token=encoded_jwt.access, userId=u.id, userLevel=u.level, expires_at=encoded_jwt.expires_at)
 			logger.info(f"login user: {u.name}, id: {u.id}")
 			await BearerToken.objects.create(entry_time=datetime.now(settings.TIMEZONE), user=u, scopes="all", access_token=encoded_jwt.access, refresh_token=encoded_jwt.refresh, expires_at=encoded_jwt.expires_at)
+			await send_email("Login", u.email, "login detected")
 			return FunctionRespons(status = TypeRespons.OK, data={"refresh":encoded_jwt.refresh, "response": result})
 		return FunctionRespons(status = TypeRespons.ERROR, detail='invalid data')
 	except Exception as e:

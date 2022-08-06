@@ -58,6 +58,7 @@ export const authReducer = (state:IAuthState = initialSate(), action:ActionType)
 			}))
 			return {...state, token: action.payload.token, id: action.payload.id, level: action.payload.level, isAuthenticated: !!action.payload.token, expires_at: new Date(action.payload.expires_at)}
 		case "REFRESH":
+			console.log(state)
 			localStorage.setItem(storegeName, JSON.stringify({
 				...state, token:action.payload.token, expires_at:action.payload.expires_at
 			}))

@@ -14,8 +14,24 @@
 		.settings_block_field{
 			padding: 0 20px;
 			line-height: 60px;
-			display: flex;
+			height: 60px;
+			position: relative;
+			display: flex; 
 			justify-content: space-between;
+			.settings_block_field_input-data{
+				top:0;
+				position: relative;
+				background: var(--color-normal);
+				input{
+					background: var(--color-normal);
+					color: var(--text-normal);
+					position: relative;
+				}
+				label{
+					bottom: 0;
+					line-height: 15px;
+				}
+			}
 			.settings_block_field_text{
 				font-size: 20px;
 			}

@@ -1,4 +1,5 @@
 import yaml
+from typing import Any, Optional
 import os, sys
 
 def writeYMLFile(path, data):
@@ -23,6 +24,12 @@ class Settings:
 	def get_config(self)->dict:
 		buf = readYMLFile(self.__file)
 		return buf
+
+	def get(self, key:str)->Optional[Any]:
+		buf = readYMLFile(self.__file)
+		if key in buf:
+			return buf[key]
+		return None
 
 	def patch_config(self, content:dict):
 		buf = readYMLFile(self.__file)

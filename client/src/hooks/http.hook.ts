@@ -29,7 +29,7 @@ export const useHttp = () => {
 	  dispatch({type: "LOGOUT"})
       throw new Error(data.message||'что-то пошло не так')
     }
-	dispatch({type: "LOGIN", payload:{token: data.token, expires_at: data.expires_at}})
+	dispatch({type: "REFRASH", payload:{token: data.token, expires_at: data.expires_at}})
     return data.token
   },[dispatch])
 
