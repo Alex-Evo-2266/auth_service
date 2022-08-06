@@ -1,7 +1,7 @@
 version: "3.3"
 
 services:
-  sh_db:
+  auth_db:
     image: mariadb
      # image: 459below/mariadb-armv7:latest
     restart: always
@@ -19,7 +19,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     volumes:
-      - client_voluem:/client/build
+      - client_voluem:/client/build+
   auth_service:
     restart: always
     build:
@@ -33,6 +33,7 @@ services:
       AUTH_SERVICE_BD_NAME: ${MYSQL_DATABASE}
       AUTH_SERVICE_BD_USER: ${MYSQL_USER}
       AUTH_SERVICE_BD_PASSWORD: ${MYSQL_PASSWORD}
+      REGISTER_USER: ${REGISTER_USER}
     expose:
       - 8000
     ports:
@@ -40,14 +41,7 @@ services:
     volumes:
       - media_voluem:/home/auth_service/web/media
     depends_on:
-      - sh_db
-  phpmyadmin:
-    image: phpmyadmin
-    restart: always
-    ports:
-      - 8080:80
-    environment:
-      - PMA_ARBITRARY=1
+      - auth_db
   nginx:
     build: ./nginx
     ports:
