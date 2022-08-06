@@ -5,6 +5,7 @@ from auth_service.logic.image import set_profile_image
 from auth_service.logic.user import addUser, deleteUser, editUser, getUser, getUsers
 from auth_service.logic.user_config import get_user_config, set_config
 from auth_service.schemas.base import TokenData, TypeRespons
+from auth_service.schemas.auth import UserLevel
 from auth_service.schemas.user import TypeTheme, UserEditSchema, UserForm, UserSchema
 from auth_service.logic.auth import auth
 
@@ -23,7 +24,6 @@ router = APIRouter(
 )
 
 async def user_create_token_dep(authorization_token: Optional[str] = Header(None))->TokenData:
-	print(type(REGISTER_USER),REGISTER_USER)
 	if REGISTER_USER:
 		return TokenData(user_id=-1, user_level=-1)
 	if not authorization_token:
@@ -37,7 +37,7 @@ async def user_create_token_dep(authorization_token: Optional[str] = Header(None
 
 @router.post("/create")
 async def add(data: UserForm, auth_data:TokenData = Depends(user_create_token_dep)):
-	if auth_data.user_level != 3 and not REGISTER_USER:
+	if auth_data.user_level != UserLevel.ADMIN and not REGISTER_USER:
 	   return JSONResponse(status_code=403, content={"message": "not enough rights for the operation."})
 	res = await addUser(data)
 	if res.status == 'ok':

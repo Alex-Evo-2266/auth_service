@@ -44,6 +44,7 @@ services:
     ports:
       - 5050:8000
     volumes:
+      - config_voluem:/home/auth_service/web/files
       - media_voluem:/home/auth_service/web/media
       - ./auth_service/auth_service:/home/smart_home/web/auth_service
     depends_on:
@@ -68,3 +69,4 @@ services:
 volumes:
   bd_data:
   media_voluem:
+  config_voluem:

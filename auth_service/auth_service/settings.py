@@ -61,4 +61,4 @@ if not os.path.exists(SERVER_CONFIG):
 	file = open(SERVER_CONFIG, "w+")
 	file.close()
 
-config = Settings(SERVER_CONFIG)
+config = Settings(SERVER_CONFIG, data)

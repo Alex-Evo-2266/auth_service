@@ -1,9 +1,9 @@
 import datetime
 from pydantic import BaseModel
 from typing import List
-from enum import Enum
+from enum import Enum, IntEnum
 
-class UserLevel(int, Enum):
+class UserLevel(IntEnum):
 	ADMIN = 3,
 	MID = 2,
 	USER = 1,

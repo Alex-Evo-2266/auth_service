@@ -16,7 +16,7 @@ async def addAdmin():
     try:
         logger.debug(f"add admin")
         hashedPass = bcrypt.hashpw("admin".encode('utf-8'), bcrypt.gensalt())
-        newUser = await User.objects.create(name="admin", email="",password=hashedPass, level=UserLevel.ADMIN, profile_image=-1)
+        newUser = await User.objects.create(name="admin", email="",password=hashedPass, level=UserLevel.ADMIN.value, profile_image=-1)
         return {'status':'ok'}
     except Exception as e:
         logger.error(f"error add user: {e}")
