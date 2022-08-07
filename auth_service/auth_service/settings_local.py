@@ -10,3 +10,6 @@ MYSQL_PORT = "3306"
 DEBUG = True
 
 REGISTER_USER = True
+
+ORIGINS = ["localhost",'127.0.0.1']
+

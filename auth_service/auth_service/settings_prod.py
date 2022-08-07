@@ -13,3 +13,5 @@ register_user_str = os.environ.get("REGISTER_USER")
 REGISTER_USER = register_user_str.lower() in ['true', '1', 'y', 'yes']
 
 print(REGISTER_USER)
+
+ORIGINS = ["localhost",'127.0.0.1', "178.207.154.253"]

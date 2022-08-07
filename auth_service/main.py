@@ -1,5 +1,6 @@
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 import logging
 
@@ -32,14 +33,14 @@ app = FastAPI(
 
 if DEBUG:
     app.mount("/media", StaticFiles(directory=MEDIA_ROOT), name="media")
-# else:
-#     app.add_middleware(
-#         CORSMiddleware,
-#         allow_origins=ORIGINS,
-#         allow_credentials=True,
-#         allow_methods=["*"],
-#         allow_headers=["*"],
-#     )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 app.state.database = database
 
