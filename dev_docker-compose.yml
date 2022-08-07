@@ -1,7 +1,7 @@
 version: "3.3"
 
 services:
-  sh_db:
+  auth_db:
     image: mariadb
      # image: 459below/mariadb-armv7:latest
     restart: always
@@ -48,7 +48,7 @@ services:
       - media_voluem:/home/auth_service/web/media
       - ./auth_service/auth_service:/home/smart_home/web/auth_service
     depends_on:
-      - sh_db
+      - auth_db
   phpmyadmin:
     image: phpmyadmin
     restart: always

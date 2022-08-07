@@ -5,8 +5,6 @@ services:
     image: mariadb
      # image: 459below/mariadb-armv7:latest
     restart: always
-    ports:
-      - 3307:3306
     volumes:
       - bd_data:/var/lib/mysql
     environment:
@@ -19,7 +17,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     volumes:
-      - client_voluem:/client/build+
+      - client_voluem:/client/build
   auth_service:
     restart: always
     build:
@@ -36,9 +34,8 @@ services:
       REGISTER_USER: ${REGISTER_USER}
     expose:
       - 8000
-    ports:
-      - 5000:8000
     volumes:
+      - config_voluem:/home/auth_service/web/files
       - media_voluem:/home/auth_service/web/media
     depends_on:
       - auth_db
@@ -55,4 +52,5 @@ services:
 volumes:
   bd_data:
   media_voluem:
+  config_voluem:
   client_voluem:
