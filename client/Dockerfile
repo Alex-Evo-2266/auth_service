@@ -2,7 +2,7 @@ FROM node:16
 
 WORKDIR /client
 
-ARG REACT_APP_REGISTER_USER=false
+ARG REACT_APP_REGISTER_USER
 
 COPY . /client
 
