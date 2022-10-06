@@ -55,13 +55,16 @@ async def ref(data: RefrashToken):
 @router.get("/authorize", response_model=AuthResponse)
 async def authorize(response_type:TypeResponse  = Query(TypeResponse.CODE), client_id:str = Query(...), redirect_uri:str = Query(...), scope:List[str] = Query(["user_style", "user_name", "user_email"]), state:str = Query(...), auth_data: TokenData = Depends(token_dep)):
 	res = await auth_code(client_id, redirect_uri, scope, auth_data.user_id)
+	code = res.data["code"]
+	user = res.data["user_name"]
 	if (res.status == TypeRespons.OK):
-		return AuthResponse(code=res.data, state=state)
+		return AuthResponse(code=code, state=state, user_name=user)
 	return JSONResponse(status_code=400, content={"message": res.detail})
 
 @router.get("/token", response_model=TokenResponse)
 async def give_token(host:Optional[str] = Header(None), sec_ch_ua_platform: Union[str, None] = Header(default=None), grant_type:TypeGrant = Query(TypeGrant.CODE), code:str = Query(...), redirect_uri:str = Query(...), client_id:str = Query(...), client_secret:str = Query(...)):
 	if (grant_type == TypeGrant.CODE):
+		print(host, sec_ch_ua_platform)
 		tokens = await get_token(code, client_id, client_secret, sec_ch_ua_platform, host)
 		if tokens.status == TypeRespons.OK:
 			return tokens.data

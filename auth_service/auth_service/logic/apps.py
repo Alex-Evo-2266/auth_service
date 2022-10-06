@@ -125,29 +125,38 @@ async def auth_code(client_id:str, redirect_uri:str, scope:List[str], user_id:in
 		print(codes)
 	await AuthCode.objects.create(client=client, user=user, scopes=";".join(scope), redirect_uri=redirect_uri, expires_at=expires_at, code=code, challenge_method="", challenge="")
 	logger.info("auth code client_id={client_id}")
-	return FunctionRespons(status=TypeRespons.OK, data=code)
+	return FunctionRespons(status=TypeRespons.OK, data={"code":code, "user_name":user.name})
 
 
 async def get_token(code: str, client_id: str, client_secret:str, platform:str = "", host:str = "")->FunctionRespons:
-	client = await Client.objects.get_or_none(client_id=client_id)
-	if not client:
-		logger.warning(f"client not found client_id={client_id}")
-		return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
-	if client.client_secret != client_secret:
-		logger.info(f"client_secret invalid")
-		return FunctionRespons(status=TypeRespons.ERROR, detail="invalid secret")
-	code_obj = await AuthCode.objects.get_or_none(code=code, client=client)
-	if not code_obj:
-		return FunctionRespons(status=TypeRespons.ERROR, detail="code not found")
-	if code_obj.expires_at < datetime.utcnow():
+	try:
+		client = await Client.objects.get_or_none(client_id=client_id)
+		if not client:
+			logger.warning(f"client not found client_id={client_id}")
+			return FunctionRespons(status=TypeRespons.ERROR, detail="app not found")
+		if client.client_secret != client_secret:
+			logger.info(f"client_secret invalid")
+			return FunctionRespons(status=TypeRespons.ERROR, detail="invalid secret")
+		code_obj = await AuthCode.objects.get_or_none(code=code, client=client)
+		if not code_obj:
+			return FunctionRespons(status=TypeRespons.ERROR, detail="code not found")
+		if code_obj.expires_at < datetime.utcnow():
+			await code_obj.delete()
+			return FunctionRespons(status=TypeRespons.ERROR, detail="authorization code is outdated.")
+		tokens = await create_tokens(code_obj.user.id)
+		arr = code_obj.scopes.split(";")
+		# user = code_obj.user.
+		user_id = code_obj.user.id
+		user = await User.objects.get_or_none(id=user_id)
+		if (not user):
+			return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
+		await BearerToken.objects.create(host=host, platform=platform, user=code_obj.user, client=client, scopes=code_obj.scopes, access_token=tokens.access, refresh_token=tokens.refresh, expires_at=tokens.expires_at, entry_time=datetime.now(settings.TIMEZONE))
 		await code_obj.delete()
-		return FunctionRespons(status=TypeRespons.ERROR, detail="authorization code is outdated.")
-	tokens = await create_tokens(code_obj.user.id)
-	arr = code_obj.scopes.split(";")
-	await BearerToken.objects.create(host=host, platform=platform, user=code_obj.user, client=client, scopes=code_obj.scopes, access_token=tokens.access, refresh_token=tokens.refresh, expires_at=tokens.expires_at)
-	await code_obj.delete()
-	data = TokenResponse(access_token=tokens.access, expires_at=tokens.expires_at, token_type=TokenType.BEARER_TOKEN, refresh_token=tokens.refresh, scope=arr)
-	logger.info("get token client_id={client_id}")
-	return FunctionRespons(status=TypeRespons.OK, data=data)
+		data = TokenResponse(user_name=user.name, access_token=tokens.access, expires_at=tokens.expires_at, token_type=TokenType.BEARER_TOKEN, refresh_token=tokens.refresh, scope=arr)
+		logger.info("get token client_id={client_id}")
+		return FunctionRespons(status=TypeRespons.OK, data=data)
+	except Exception as e:
+		logger.warning(f"error get_token {e}")
+		return FunctionRespons(status=TypeRespons.ERROR, detail=e)
 
 

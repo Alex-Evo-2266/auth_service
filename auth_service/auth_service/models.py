@@ -34,7 +34,7 @@ class User(ormar.Model):
 	# role: Optional[Role] = ormar.ForeignKey(Role, related_name="role")
 
 	def __str__(self):
-		return self.UserName
+		return self.name
 
 class Client(ormar.Model):
 	class Meta(BaseMeta):

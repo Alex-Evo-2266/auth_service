@@ -25,7 +25,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "REACT_APP_REGISTER_USER=true && react-scripts start",
+    "start": "REACT_APP_REGISTER_USER=true && PORT=2000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -36,7 +36,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:5050",
   "browserslist": {
     "production": [
       ">0.2%",

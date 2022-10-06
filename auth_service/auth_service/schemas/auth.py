@@ -20,6 +20,7 @@ class TokenType(str, Enum):
 
 class AuthResponse(BaseModel):
 	code: str
+	user_name: str
 	state: str
 
 class Login(BaseModel):
@@ -52,6 +53,7 @@ class ResponseCode(BaseModel):
 	expires_at: datetime.datetime
 
 class TokenResponse(BaseModel):
+	user_name: str
 	access_token: str
 	expires_at: datetime.datetime
 	token_type: TokenType = TokenType.BEARER_TOKEN
@@ -59,7 +61,7 @@ class TokenResponse(BaseModel):
 	scope: List[str]
 
 class SessionSchema(BaseModel):
-	id :int
+	id: int
 	client_name: str
 	entry_time: datetime.datetime = datetime.datetime.now()
 	host: str
