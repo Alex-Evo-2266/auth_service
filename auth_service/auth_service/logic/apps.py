@@ -144,6 +144,12 @@ async def get_token(code: str, client_id: str, client_secret:str, platform:str =
 			await code_obj.delete()
 			return FunctionRespons(status=TypeRespons.ERROR, detail="authorization code is outdated.")
 		tokens = await create_tokens(code_obj.user.id)
+		a_b_tokens = await BearerToken.objects.get_or_none(access_token = tokens.access)
+		r_b_tokens = await BearerToken.objects.get_or_none(refresh_token = tokens.refresh)
+		while r_b_tokens or a_b_tokens:
+			tokens = await create_tokens(code_obj.user.id)
+			a_b_tokens = await BearerToken.objects.get_or_none(access_token = tokens.access)
+			r_b_tokens = await BearerToken.objects.get_or_none(refresh_token = tokens.refresh)
 		arr = code_obj.scopes.split(";")
 		# user = code_obj.user.
 		user_id = code_obj.user.id
