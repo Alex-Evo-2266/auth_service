@@ -16,14 +16,15 @@ import { Card } from './components/card/card';
 const App:React.FC = ()=>{
   const authState:IAuthState = useTypeSelector(state=>state.auth)
   const {updateBackground} = useBackgraund()
+	const dataConfig = useTypeSelector(state => state.userConfig)
   const {setTheme} = useColor()
 
   const router = useRoutes(authState.isAuthenticated)
 
   useEffect(()=>{
-    updateBackground([])
-    setTheme(null)
-  },[updateBackground, setTheme])
+		updateBackground(dataConfig.backgrounds, dataConfig.special_topic)
+		setTheme({colors: dataConfig.colors, night_colors:dataConfig.night_colors, special_colors:dataConfig.special_colors})
+	},[dataConfig, updateBackground, setTheme])
 
   return (
     <>
