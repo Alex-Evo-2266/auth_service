@@ -20,27 +20,27 @@ async def login(host:Optional[str] = Header(None), sec_ch_ua_platform: Union[str
 	try:
 		res = await Authorization(data, sec_ch_ua_platform, host)
 		if(res.status == "ok"):
-			response.set_cookie(key="refresh_toket", value=res.data["refresh"], httponly=True)
+			response.set_cookie(key="auth_service", value=res.data["refresh"], httponly=True)
 			return res.data["response"]
 		return JSONResponse(status_code=403, content={"message": res.detail})
 	except Exception as e:
 		return JSONResponse(status_code=400, content={"message": str(e)})
 
 @router.get("/logout")
-async def give_token(auth_data: TokenData = Depends(token_dep), refresh_toket: Optional[str] = Cookie(None)):
-	res = await logout(auth_data.user_id, refresh_toket)
+async def give_token(auth_data: TokenData = Depends(token_dep), auth_service: Optional[str] = Cookie(None)):
+	res = await logout(auth_data.user_id, auth_service)
 	if res.status == TypeRespons.OK:
 		return "ok"
 	return JSONResponse(status_code=400, content={"message": res.detail})
 
 @router.get("/refresh", response_model=Token)
-async def ref(refresh_toket: Optional[str] = Cookie(None)):
-	res = await rtoken(refresh_toket)
+async def ref(auth_service: Optional[str] = Cookie(None)):
+	res = await rtoken(auth_service)
 	if(res.status == "ok"):
 		p:Token = res.data["response"]
 		p.expires_at = p.expires_at.strftime("%Y-%m-%dT%H:%M:%S")
 		response = JSONResponse(status_code=200, content=p.dict())
-		response.set_cookie(key="refresh_toket", value=res.data["refresh"], httponly=True)
+		response.set_cookie(key="auth_service", value=res.data["refresh"], httponly=True)
 		return response
 	return JSONResponse(status_code=403, content={"message": res.detail})
 
