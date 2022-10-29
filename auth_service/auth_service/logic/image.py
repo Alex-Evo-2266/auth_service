@@ -1,5 +1,6 @@
 import logging
 import os
+from turtle import title
 from typing import List
 from webbrowser import BackgroundBrowser
 from auth_service.models import Image, ImageBackground, User
@@ -53,8 +54,10 @@ async def delete_image(user_id:int, image_id:int):
 			user.profile_image = -1
 			await user.update(_columns=["profile_image"])
 		file_path = os.path.join(IMAGE_DIR, image.title)
+		images = await Image.objects.all(title=image.title)
 		await image.delete()
-		os.remove(file_path)
+		if not images or (images and len(images) <= 0):
+			os.remove(file_path)
 		return FunctionRespons(status=TypeRespons.OK)
 	except Exception as e:
 		return FunctionRespons(status = TypeRespons.ERROR, detail=str(e))
