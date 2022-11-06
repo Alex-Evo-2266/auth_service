@@ -5,8 +5,8 @@ from auth_service.depends.auth import token_dep
 from auth_service.logic.apps import auth_code, get_token
 from auth_service.schemas.base import TokenData, TypeRespons
 
-from auth_service.logic.auth import refresh_token as rtoken, login as Authorization, logout, get_sessions, delete_sessions
-from auth_service.schemas.auth import Login, SessionSchema, RefrashToken, ResponseLogin, Token, TokenType, Tokens, TypeResponse, TypeGrant, AuthResponse, TokenResponse
+from auth_service.logic.auth import auth, refresh_token as rtoken, login as Authorization, logout, get_sessions, delete_sessions
+from auth_service.schemas.auth import Login, LogoutTokenSchema, SessionSchema, RefrashToken, ResponseLogin, Token, TokenType, Tokens, TypeResponse, TypeGrant, AuthResponse, TokenResponse
 
 
 router = APIRouter(
@@ -33,6 +33,13 @@ async def give_token(auth_data: TokenData = Depends(token_dep), auth_service: Op
 		return "ok"
 	return JSONResponse(status_code=400, content={"message": res.detail})
 
+@router.post("/logout")
+async def give_token(token: LogoutTokenSchema, auth_data: TokenData = Depends(token_dep)):
+	res = await logout(auth_data.user_id, token.refresh_token)
+	if res.status == TypeRespons.OK:
+		return "ok"
+	return JSONResponse(status_code=400, content={"message": res.detail})
+
 @router.get("/refresh", response_model=Token)
 async def ref(auth_service: Optional[str] = Cookie(None)):
 	res = await rtoken(auth_service)
@@ -46,7 +53,7 @@ async def ref(auth_service: Optional[str] = Cookie(None)):
 
 @router.post("/refresh", response_model=Tokens)
 async def ref(data: RefrashToken):
-	res = await rtoken(data.refresh_toket)
+	res = await rtoken(data.refresh_token)
 	if(res.status == "ok"):
 		tokens = Tokens(access=res.data["response"].token, expires_at=res.data["response"].expires_at, refresh=res.data["refresh"])
 		return tokens

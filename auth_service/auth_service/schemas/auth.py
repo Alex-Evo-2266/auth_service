@@ -54,6 +54,7 @@ class ResponseCode(BaseModel):
 
 class TokenResponse(BaseModel):
 	user_name: str
+	user_id:int
 	access_token: str
 	expires_at: datetime.datetime
 	token_type: TokenType = TokenType.BEARER_TOKEN
@@ -66,3 +67,7 @@ class SessionSchema(BaseModel):
 	entry_time: datetime.datetime = datetime.datetime.now()
 	host: str
 	platform: str
+
+
+class LogoutTokenSchema(BaseModel):
+	refresh_token: str

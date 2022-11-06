@@ -38,7 +38,7 @@ async def user_create_token_dep(authorization_token: Optional[str] = Header(None
 @router.post("/create")
 async def add(data: UserForm, auth_data:TokenData = Depends(user_create_token_dep)):
 	if auth_data.user_level != UserLevel.ADMIN and not REGISTER_USER:
-	   return JSONResponse(status_code=403, content={"message": "not enough rights for the operation."})
+		return JSONResponse(status_code=403, content={"message": "not enough rights for the operation."})
 	res = await addUser(data)
 	if res.status == 'ok':
 		return {"message":"ok"}

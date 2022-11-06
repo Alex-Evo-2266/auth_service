@@ -158,7 +158,7 @@ async def get_token(code: str, client_id: str, client_secret:str, platform:str =
 			return FunctionRespons(status=TypeRespons.ERROR, detail="user not found")
 		await BearerToken.objects.create(host=host, platform=platform, user=code_obj.user, client=client, scopes=code_obj.scopes, access_token=tokens.access, refresh_token=tokens.refresh, expires_at=tokens.expires_at, entry_time=datetime.now(settings.TIMEZONE))
 		await code_obj.delete()
-		data = TokenResponse(user_name=user.name, access_token=tokens.access, expires_at=tokens.expires_at, token_type=TokenType.BEARER_TOKEN, refresh_token=tokens.refresh, scope=arr)
+		data = TokenResponse(user_id=user.id, user_name=user.name, access_token=tokens.access, expires_at=tokens.expires_at, token_type=TokenType.BEARER_TOKEN, refresh_token=tokens.refresh, scope=arr)
 		logger.info("get token client_id={client_id}")
 		return FunctionRespons(status=TypeRespons.OK, data=data)
 	except Exception as e:

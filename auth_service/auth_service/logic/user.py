@@ -34,6 +34,7 @@ async def addUser(data: UserForm)->FunctionRespons:
 
 async def getUser(id)->FunctionRespons:
 	user = await User.objects.get_or_none(id=id)
+	print(id, user)
 	if not user:
 		logger.error(f"none user")
 		return FunctionRespons(status = TypeRespons.NOT_FOUND, detail="user not found")

@@ -76,11 +76,9 @@ async def create_token(data: dict, expires_at: datetime = datetime.now(settings.
 	encoded_jwt = jwt.encode(to_encode, secret, algorithm = settings.ALGORITHM)
 	return encoded_jwt
 
-async def auth(Authorization)->FunctionRespons:
+async def auth(token:str)->FunctionRespons:
 	try:
-		head = Authorization
-		jwtdata = head
-		jwtdata = head.split(" ")[1]
+		jwtdata = token
 		data = jwt.decode(jwtdata,settings.SECRET_JWT_KEY,algorithms=[settings.ALGORITHM])
 		if not('exp' in data and 'user_id' in data and data['sub'] == "access"):
 			logger.worning(f"no data in jwt")
