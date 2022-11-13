@@ -9,6 +9,8 @@
 	background: var(--color-normal-glass);
 	.colors{
 		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
 		.color_container{
 			margin: 20px;
 			p{

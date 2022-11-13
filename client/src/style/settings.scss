@@ -131,12 +131,21 @@ input[type="color"]{
 		margin: 10px;
 		background: var(--color-base-v2);
 		border-radius: 4px;
+		@media (max-width: 600px){
+			display: flex;
+			flex-direction: column-reverse;
+		}
 		.background-item-title{
 			position: relative;
 			height: 250px;
 			width: calc(100% - 400px);
 			text-align: center;
 			top: 50%;
+			@media (max-width: 600px){
+				top: 0;
+				height: 60px;
+				width: 100%;
+			}
 		}
 		.background-item-img{
 			width: 400px;
@@ -144,6 +153,11 @@ input[type="color"]{
 			right: 5px;
 			overflow: hidden;
 			position: absolute;
+			@media (max-width: 600px){
+				right: 0;
+				width:100%;
+				position: relative;
+			}
 			img{
 				object-fit: cover;
 				width: 100%;
