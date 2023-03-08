@@ -23,8 +23,8 @@ services:
     build:
       context: ./auth_service
       dockerfile: Dockerfile
-    command: bash -c "alembic upgrade head &&
-              uvicorn main:app --reload --port=8000 --host='0.0.0.0'"
+    command: bash -c "/opt/poetry/venv/bin/alembic upgrade head &&
+              /opt/poetry/venv/bin/uvicorn main:app --reload --port=8000 --host='0.0.0.0'"
     environment:
       AUTH_SERVICE_BD_HOST: ${SMARTHOME_BD_HOST}
       AUTH_SERVICE_BD_PORT: ${SMARTHOME_BD_PORT}

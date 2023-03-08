@@ -31,7 +31,12 @@ RUN set -x && apt-get -qq update \
     && apt-get purge -y --auto-remove\
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_HOME=/opt/poetry python && \
+# RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_HOME=/opt/poetry python && \
+#     cd /usr/local/bin && \
+#     ln -s /opt/poetry/bin/poetry && \
+#     poetry config virtualenvs.create false
+
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
     cd /usr/local/bin && \
     ln -s /opt/poetry/bin/poetry && \
     poetry config virtualenvs.create false
@@ -41,6 +46,8 @@ COPY pyproject.toml $APP_HOME/
 
 RUN poetry config virtualenvs.create false \
   && poetry install $(test "$YOUR_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
+
+# RUN apt-get install -y python-alembic
 
 COPY . $APP_HOME
 
